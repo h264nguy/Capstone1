@@ -1,0 +1,98 @@
+[
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "sparkling_citrus_mix",
+    "drinkName": "Sparkling Citrus Mix",
+    "quantity": 1,
+    "calories": 118
+  },
+  {
+    "drinkId": "golden_breeze",
+    "drinkName": "Golden Breeze",
+    "quantity": 1,
+    "calories": 64
+  },
+  {
+    "drinkId": "energy_sunrise",
+    "drinkName": "Energy Sunrise",
+    "quantity": 1,
+    "calories": 67
+  },
+  {
+    "drinkId": "cola_spark",
+    "drinkName": "Cola Spark",
+    "quantity": 1,
+    "calories": 81
+  },
+  {
+    "drinkId": "sunset_fizz",
+    "drinkName": "Sunset Fizz",
+    "quantity": 1,
+    "calories": 87
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "dark_amber",
+    "drinkName": "Dark Amber",
+    "quantity": 10,
+    "calories": 65
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104
+  },
+  {
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0
+  }
+]
