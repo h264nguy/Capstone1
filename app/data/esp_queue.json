@@ -1,0 +1,18 @@
+[
+  {
+    "id": "0cea80a5-c69a-44ef-9f14-d129e19e9628",
+    "username": "guest",
+    "ts": "2026-03-07T04:42:01.268839+00:00",
+    "mood": null,
+    "status": "Pending",
+    "items": [
+      {
+        "drinkId": "amber_storm",
+        "drinkName": "Amber Storm",
+        "quantity": 1,
+        "calories": 104
+      }
+    ],
+    "estSeconds": 33
+  }
+]
