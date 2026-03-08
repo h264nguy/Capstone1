@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Bartender Status</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:#f7efe5;background:linear-gradient(180deg,rgba(10,10,12,.82),rgba(17,17,22,.92)),url('/static/background-1.png') center/cover no-repeat fixed;display:flex;align-items:center;justify-content:center;padding:20px}
+    .panel{width:min(980px,100%);background:rgba(0,0,0,.56);border:1px solid rgba(255,255,255,.14);border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.45);overflow:hidden;backdrop-filter:blur(10px)}
+    .header{padding:24px 28px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .eyebrow{font-size:12px;letter-spacing:.22em;opacity:.8;text-transform:uppercase}
+    h1{margin:8px 0 0;font-size:clamp(28px,4vw,52px)}
+    .body{padding:24px 28px 30px;display:grid;gap:18px}
+    .main-card,.stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:22px}
+    .main-card{padding:22px}
+    .stat{padding:18px}
+    .label{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-bottom:8px}
+    .drink{font-size:clamp(34px,5vw,64px);font-weight:700;line-height:1.02;margin:0 0 14px}
+    .headline{font-size:clamp(18px,2.6vw,28px);opacity:.95;margin:0}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .stat-value{font-size:clamp(24px,3vw,40px);font-weight:700;margin-top:4px}
+    .ingredients-list{font-size:20px;line-height:1.35;word-break:break-word}
+    .progress-wrap{background:rgba(255,255,255,.10);height:18px;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#f9dfb0,#f4a261);transition:width .4s linear}
+    .progress-text{margin-top:10px;font-size:18px;opacity:.9}
+    .footer{display:flex;justify-content:space-between;gap:18px;align-items:center;opacity:.72;font-size:14px}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#8be28b;box-shadow:0 0 14px rgba(139,226,139,.8);margin-right:8px}
+    @media (max-width:760px){.grid{grid-template-columns:1fr}.panel{border-radius:20px}.body,.header{padding:18px}}
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <div class="header">
+      <div class="eyebrow">Capstone Live Machine Display</div>
+      <h1>Smart Bartender Status</h1>
+    </div>
+    <div class="body">
+      <div class="main-card">
+        <div class="label">Now Making</div>
+        <p class="drink" id="drink">Idle</p>
+        <div class="label">Current Action</div>
+        <p class="headline" id="headline">Waiting for next order</p>
+      </div>
+
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Ingredient(s)</div>
+          <div class="stat-value ingredients-list" id="ingredient">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Step</div>
+          <div class="stat-value" id="step">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Time Left</div>
+          <div class="stat-value" id="time">0s</div>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Progress</div>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">0%</div>
+      </div>
+
+      <div class="footer">
+        <div><span class="dot"></span><span id="connection">Live</span></div>
+        <div id="updated">Waiting for updates…</div>
+      </div>
+    </div>
+  </div>
+<script>
+const drinkLookup = {};
+let liveStatus = null;
+const orderBaselines = {};
+
+function prettyLabel(v){
+  return String(v || '').replace(/[_-]+/g, ' ').split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+}
+function setText(id, value, fallback='—'){
+  document.getElementById(id).textContent = (value !== undefined && value !== null && String(value).trim() !== '') ? value : fallback;
+}
+function secondsLabel(v){
+  const n = Number(v || 0);
+  return Number.isFinite(n) ? `${Math.max(0, Math.round(n))}s` : '0s';
+}
+async function loadDrinkLookup(){
+  try{
+    const res = await fetch('/api/drinks', {cache:'no-store'});
+    const arr = await res.json();
+    (arr || []).forEach(d => {
+      drinkLookup[d.id] = {
+        name: d.name || prettyLabel(d.id),
+        ingredients: Array.isArray(d.ingredients) ? d.ingredients.map(prettyLabel) : []
+      };
+    });
+  }catch(_e){}
+}
+function getBaseline(s, remaining){
+  const key = String(s.orderId || s.drinkId || s.drink || '__default__');
+  if(!orderBaselines[key]){
+    orderBaselines[key] = {
+      initialRemaining: Math.max(1, Number(s.remainingSeconds || remaining || 1)),
+      totalIngredients: Math.max(0, Number(s.totalIngredients || (Array.isArray(s.ingredients) ? s.ingredients.length : 0) || 0)),
+      updatedAt: s.updatedAt || null,
+    };
+  }
+  const b = orderBaselines[key];
+  const serverRemaining = Math.max(0, Number(s.remainingSeconds || 0));
+  if(serverRemaining > b.initialRemaining){
+    b.initialRemaining = serverRemaining;
+  }
+  const total = Math.max(0, Number(s.totalIngredients || (Array.isArray(s.ingredients) ? s.ingredients.length : 0) || 0));
+  if(total > b.totalIngredients){
+    b.totalIngredients = total;
+  }
+  if(s.updatedAt){
+    b.updatedAt = s.updatedAt;
+  }
+  return b;
+}
+function normalizeStatus(raw){
+  const s = Object.assign({}, raw || {});
+  const meta = s.drinkId ? (drinkLookup[s.drinkId] || null) : null;
+  const ingredients = Array.isArray(s.ingredients) && s.ingredients.length ? s.ingredients.map(prettyLabel) : (meta ? meta.ingredients : []);
+  s.ingredients = ingredients;
+  if (meta && (!s.drink || ingredients.includes(prettyLabel(s.drink)))) {
+    s.drink = meta.name;
+  }
+  if ((!s.totalIngredients || Number(s.totalIngredients) <= 0) && ingredients.length) {
+    s.totalIngredients = ingredients.length;
+  }
+  if (s.currentIngredient) s.currentIngredient = prettyLabel(s.currentIngredient);
+  return s;
+}
+function renderStatus(raw){
+  const s = normalizeStatus(raw);
+  const machine = String(s.machine || '').toLowerCase();
+  const updatedMs = s.updatedAt ? new Date(s.updatedAt).getTime() : Date.now();
+  const elapsed = Math.max(0, Math.floor((Date.now() - updatedMs) / 1000));
+  const baseRemaining = Math.max(0, Number(s.remainingSeconds || 0));
+  const remaining = Math.max(0, baseRemaining - elapsed);
+  const baseline = getBaseline(s, remaining);
+  const total = Math.max(0, Number(s.totalIngredients || baseline.totalIngredients || 0));
+  const denom = Math.max(1, Number(baseline.initialRemaining || baseRemaining || 1));
+
+  let inferredProgress = Math.round(((denom - remaining) / denom) * 100);
+  inferredProgress = Math.max(0, Math.min(100, inferredProgress));
+  let progress = Number(s.progress || 0);
+  if(machine === 'done') progress = 100;
+  else if(machine !== 'idle' && machine !== 'waiting') progress = Math.max(progress, inferredProgress);
+  progress = Math.max(0, Math.min(100, progress));
+
+  let stepNow = Number(s.currentIngredientIndex || 0);
+  if(machine === 'done'){
+    stepNow = total;
+  } else if(total > 0){
+    const elapsedRatio = Math.max(0, Math.min(1, (denom - remaining) / denom));
+    const inferredFromClock = remaining > 0 ? Math.min(total, Math.floor(elapsedRatio * total) + 1) : total;
+    const inferredFromCurrentIngredient = (Array.isArray(s.ingredients) && s.currentIngredient)
+      ? Math.max(0, s.ingredients.findIndex(x => String(x).toLowerCase() === String(s.currentIngredient).toLowerCase()) + 1)
+      : 0;
+    if(machine === 'queued' && progress < 3 && remaining >= denom - 1){
+      stepNow = 0;
+    } else {
+      stepNow = Math.max(stepNow, inferredFromCurrentIngredient, inferredFromClock);
+      stepNow = Math.min(total, Math.max(remaining > 0 ? 1 : 0, stepNow));
+    }
+  }
+
+  let ingredientText = s.currentIngredient || '';
+  if(Array.isArray(s.ingredients) && s.ingredients.length){
+    if(machine === 'done'){
+      ingredientText = s.ingredients.join(', ');
+    } else if(stepNow > 0){
+      ingredientText = s.ingredients[Math.min(stepNow - 1, s.ingredients.length - 1)] || ingredientText;
+    } else {
+      ingredientText = s.ingredients.join(', ');
+    }
+  }
+
+  let headline = s.headline || '';
+  if(!headline){
+    headline = (machine === 'idle' || machine === 'waiting') ? 'Waiting for next order' : 'Making drink';
+  }
+  if(machine === 'done'){
+    headline = 'Drink Ready';
+  } else if(stepNow > 0 && ingredientText){
+    headline = `Pouring ${ingredientText}`;
+  }
+
+  setText('drink', s.drink || 'Idle', 'Idle');
+  setText('headline', headline, 'Waiting for next order');
+  setText('ingredient', ingredientText || (s.ingredients || []).join(', '), '—');
+  setText('step', total > 0 ? `${Math.min(stepNow, total)}/${total}` : '—', '—');
+  document.getElementById('time').textContent = secondsLabel(remaining);
+  document.getElementById('progressBar').style.width = `${progress}%`;
+  document.getElementById('progressText').textContent = `${progress}%`;
+  document.getElementById('connection').textContent = 'Live';
+  document.getElementById('updated').textContent = `Updated ${new Date(updatedMs).toLocaleTimeString()}`;
+}
+async function refreshStatus(){
+  try{
+    const res = await fetch('/api/status', {cache:'no-store'});
+    const payload = await res.json();
+    liveStatus = payload.status || {};
+    renderStatus(liveStatus);
+  }catch(_e){
+    document.getElementById('connection').textContent = 'Disconnected';
+    document.getElementById('updated').textContent = 'Could not reach server';
+  }
+}
+(async function init(){
+  await loadDrinkLookup();
+  await refreshStatus();
+  setInterval(() => { if (liveStatus) renderStatus(liveStatus); }, 250);
+  setInterval(refreshStatus, 1000);
+})();
+</script>
+</body>
+</html>
