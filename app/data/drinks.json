@@ -1,0 +1,171 @@
+[
+  {
+    "id": "amber_storm",
+    "name": "Amber Storm",
+    "calories": 104,
+    "ingredients": [
+      "orange_juice",
+      "coca_cola",
+      "ginger_ale"
+    ]
+  },
+  {
+    "id": "classic_fusion",
+    "name": "Classic Fusion",
+    "calories": 76,
+    "ingredients": [
+      "coca_cola",
+      "ginger_ale"
+    ]
+  },
+  {
+    "id": "chaos_punch",
+    "name": "Chaos Punch",
+    "calories": 204,
+    "ingredients": [
+      "orange_juice",
+      "water",
+      "coca_cola",
+      "sprite",
+      "ginger_ale",
+      "red_bull"
+    ]
+  },
+  {
+    "id": "crystal_chill",
+    "name": "Crystal Chill",
+    "calories": 56,
+    "ingredients": [
+      "sprite",
+      "water",
+      "ginger_ale"
+    ]
+  },
+  {
+    "id": "cola_spark",
+    "name": "Cola Spark",
+    "calories": 81,
+    "ingredients": [
+      "coca_cola",
+      "sprite"
+    ]
+  },
+  {
+    "id": "dark_amber",
+    "name": "Dark Amber",
+    "calories": 65,
+    "ingredients": [
+      "coca_cola",
+      "ginger_ale"
+    ]
+  },
+  {
+    "id": "voltage_fizz",
+    "name": "Voltage Fizz",
+    "calories": 117,
+    "ingredients": [
+      "red_bull",
+      "sprite",
+      "ginger_ale"
+    ]
+  },
+  {
+    "id": "citrus_cloud",
+    "name": "Citrus Cloud",
+    "calories": 84,
+    "ingredients": [
+      "orange_juice",
+      "sprite",
+      "water"
+    ]
+  },
+  {
+    "id": "golden_breeze",
+    "name": "Golden Breeze",
+    "calories": 64,
+    "ingredients": [
+      "ginger_ale",
+      "orange_juice",
+      "sprite"
+    ]
+  },
+  {
+    "id": "sparkling_citrus_mix",
+    "name": "Sparkling Citrus Mix",
+    "calories": 118,
+    "ingredients": [
+      "sprite",
+      "orange_juice",
+      "ginger_ale"
+    ]
+  },
+  {
+    "id": "citrus_shine",
+    "name": "Citrus Shine",
+    "calories": 71,
+    "ingredients": [
+      "orange_juice",
+      "sprite"
+    ]
+  },
+  {
+    "id": "energy_sunrise",
+    "name": "Energy Sunrise",
+    "calories": 67,
+    "ingredients": [
+      "red_bull",
+      "orange_juice",
+      "water"
+    ]
+  },
+  {
+    "id": "sunset_fizz",
+    "name": "Sunset Fizz",
+    "calories": 87,
+    "ingredients": [
+      "red_bull",
+      "sprite",
+      "orange_juice"
+    ]
+  },
+  {
+    "id": "tropical_charge",
+    "name": "Tropical Charge",
+    "calories": 86,
+    "ingredients": [
+      "red_bull",
+      "sprite",
+      "orange_juice"
+    ]
+  },
+  {
+    "id": "base_orange_juice",
+    "name": "Orange Juice",
+    "calories": 45
+  },
+  {
+    "id": "base_water",
+    "name": "Water",
+    "calories": 0
+  },
+  {
+    "id": "base_coca_cola",
+    "name": "Coca-Cola",
+    "calories": 140
+  },
+  {
+    "id": "base_sprite",
+    "name": "Sprite",
+    "calories": 140
+  },
+  {
+    "id": "base_ginger_ale",
+    "name": "Ginger Ale",
+    "calories": 120
+  },
+  {
+    "id": "base_red_bull",
+    "name": "Red Bull",
+    "calories": 110
+  }
+]
