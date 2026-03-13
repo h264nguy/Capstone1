@@ -1,0 +1,621 @@
+[
+  {
+    "username": "1234",
+    "drinkId": "sunset_fizz",
+    "drinkName": "Sunset Fizz",
+    "quantity": 1,
+    "calories": 87,
+    "ts": "2026-01-20T03:14:35.974185"
+  },
+  {
+    "username": "1234",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 5,
+    "calories": 104,
+    "ts": "2026-01-20T03:14:57.589427"
+  },
+  {
+    "username": "1234",
+    "drinkId": "tropical_charge",
+    "drinkName": "Tropical Charge",
+    "quantity": 3,
+    "calories": 86,
+    "ts": "2026-01-20T03:14:57.589427"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_orange_juice",
+    "drinkName": "Orange Juice",
+    "quantity": 2,
+    "calories": 45,
+    "ts": "2026-01-20T03:14:57.589427"
+  },
+  {
+    "username": "1234",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-01-20T03:56:56.699143"
+  },
+  {
+    "username": "1234",
+    "drinkId": "classic_fusion",
+    "drinkName": "Classic Fusion",
+    "quantity": 1,
+    "calories": 76,
+    "ts": "2026-01-20T03:57:09.806194"
+  },
+  {
+    "username": "1234",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-01-20T04:03:35.045838"
+  },
+  {
+    "username": "1234",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-01-20T04:10:02.799022"
+  },
+  {
+    "username": "1234",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-01-20T04:16:24.058910"
+  },
+  {
+    "username": "6666",
+    "drinkId": "classic_fusion",
+    "drinkName": "Classic Fusion",
+    "quantity": 3,
+    "calories": 76,
+    "ts": "2026-01-22T02:04:56.086750+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "sparkling_citrus_mix",
+    "drinkName": "Sparkling Citrus Mix",
+    "quantity": 4,
+    "calories": 118,
+    "ts": "2026-01-22T02:04:56.086750+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "tropical_charge",
+    "drinkName": "Tropical Charge",
+    "quantity": 4,
+    "calories": 86,
+    "ts": "2026-01-22T02:04:56.086750+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "base_coca_cola",
+    "drinkName": "Coca-Cola",
+    "quantity": 3,
+    "calories": 140,
+    "ts": "2026-01-22T02:04:56.086750+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "cola_spark",
+    "drinkName": "Cola Spark",
+    "quantity": 4,
+    "calories": 81,
+    "ts": "2026-01-22T02:05:20.471060+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "citrus_cloud",
+    "drinkName": "Citrus Cloud",
+    "quantity": 4,
+    "calories": 84,
+    "ts": "2026-01-22T02:05:20.471060+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 6,
+    "calories": 104,
+    "ts": "2026-01-22T02:05:33.899478+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "base_orange_juice",
+    "drinkName": "Orange Juice",
+    "quantity": 4,
+    "calories": 45,
+    "ts": "2026-01-22T02:05:33.899478+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "sunset_fizz",
+    "drinkName": "Sunset Fizz",
+    "quantity": 4,
+    "calories": 87,
+    "ts": "2026-01-22T02:05:44.047179+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "sparkling_citrus_mix",
+    "drinkName": "Sparkling Citrus Mix",
+    "quantity": 1,
+    "calories": 118,
+    "ts": "2026-01-27T01:46:35.211819+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_coca_cola",
+    "drinkName": "Coca-Cola",
+    "quantity": 1,
+    "calories": 140,
+    "ts": "2026-01-27T01:46:52.845518+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "classic_fusion",
+    "drinkName": "Classic Fusion",
+    "quantity": 1,
+    "calories": 76,
+    "ts": "2026-01-27T01:47:28.395805+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-01-30T16:41:42.054447+00:00"
+  },
+  {
+    "username": "6666",
+    "drinkId": "classic_fusion",
+    "drinkName": "Classic Fusion",
+    "quantity": 1,
+    "calories": 76,
+    "ts": "2026-01-30T16:42:14.765448+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 4,
+    "calories": 104,
+    "ts": "2026-01-30T16:43:32.155570+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "cola_spark",
+    "drinkName": "Cola Spark",
+    "quantity": 3,
+    "calories": 81,
+    "ts": "2026-01-30T16:43:32.155570+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_sprite",
+    "drinkName": "Sprite",
+    "quantity": 3,
+    "calories": 140,
+    "ts": "2026-01-30T16:43:32.155570+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "citrus_cloud",
+    "drinkName": "Citrus Cloud",
+    "quantity": 7,
+    "calories": 84,
+    "ts": "2026-01-30T16:44:13.092633+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "chaos_punch",
+    "drinkName": "Chaos Punch",
+    "quantity": 1,
+    "calories": 204,
+    "ts": "2026-01-30T16:45:14.017359+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_coca_cola",
+    "drinkName": "Coca-Cola",
+    "quantity": 1,
+    "calories": 140,
+    "ts": "2026-01-30T16:57:27.984842+00:00"
+  },
+  {
+    "username": "1234",
+    "drinkId": "citrus_shine",
+    "drinkName": "Citrus Shine",
+    "quantity": 1,
+    "calories": 71,
+    "ts": "2026-02-04T02:05:41.703850+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-04T02:05:48.859898+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "cola_spark",
+    "drinkName": "Cola Spark",
+    "quantity": 1,
+    "calories": 81,
+    "ts": "2026-02-04T20:52:31.620264+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_orange_juice",
+    "drinkName": "Orange Juice",
+    "quantity": 1,
+    "calories": 45,
+    "ts": "2026-02-04T21:47:41.268824+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "dark_amber",
+    "drinkName": "Dark Amber",
+    "quantity": 1,
+    "calories": 65,
+    "ts": "2026-02-04T21:48:24.353121+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "golden_breeze",
+    "drinkName": "Golden Breeze",
+    "quantity": 1,
+    "calories": 64,
+    "ts": "2026-02-04T21:48:26.214424+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-04T21:48:47.087155+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_orange_juice",
+    "drinkName": "Orange Juice",
+    "quantity": 1,
+    "calories": 45,
+    "ts": "2026-02-04T21:48:49.760093+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "tropical_charge",
+    "drinkName": "Tropical Charge",
+    "quantity": 1,
+    "calories": 86,
+    "ts": "2026-02-04T23:14:20.746607+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_coca_cola",
+    "drinkName": "Coca-Cola",
+    "quantity": 1,
+    "calories": 140,
+    "ts": "2026-02-04T23:14:29.511081+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_sprite",
+    "drinkName": "Sprite",
+    "quantity": 1,
+    "calories": 140,
+    "ts": "2026-02-04T23:14:43.687022+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_ginger_ale",
+    "drinkName": "Ginger Ale",
+    "quantity": 1,
+    "calories": 120,
+    "ts": "2026-02-04T23:15:20.713162+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_red_bull",
+    "drinkName": "Red Bull",
+    "quantity": 1,
+    "calories": 110,
+    "ts": "2026-02-04T23:15:25.650675+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_orange_juice",
+    "drinkName": "Orange Juice",
+    "quantity": 1,
+    "calories": 45,
+    "ts": "2026-02-04T23:33:01.024365+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "sparkling_citrus_mix",
+    "drinkName": "Sparkling Citrus Mix",
+    "quantity": 1,
+    "calories": 118,
+    "ts": "2026-02-04T23:33:01.024365+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "1234",
+    "drinkId": "tropical_charge",
+    "drinkName": "Tropical Charge",
+    "quantity": 1,
+    "calories": 86,
+    "ts": "2026-02-04T23:33:12.371783+00:00",
+    "mood": "sweet"
+  },
+  {
+    "username": "lego",
+    "drinkId": "tropical_charge",
+    "drinkName": "Tropical Charge",
+    "quantity": 1,
+    "calories": 86,
+    "ts": "2026-02-05T04:50:09.216249+00:00",
+    "mood": "energized"
+  },
+  {
+    "username": "lego",
+    "drinkId": "citrus_cloud",
+    "drinkName": "Citrus Cloud",
+    "quantity": 1,
+    "calories": 84,
+    "ts": "2026-02-05T04:51:07.501402+00:00",
+    "mood": "energized"
+  },
+  {
+    "username": "lego",
+    "drinkId": "classic_fusion",
+    "drinkName": "Classic Fusion",
+    "quantity": 1,
+    "calories": 76,
+    "ts": "2026-02-05T05:26:40.421342+00:00",
+    "mood": "chill"
+  },
+  {
+    "username": "lego",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-02-05T05:37:33.828696+00:00",
+    "mood": "adventurous"
+  },
+  {
+    "username": "lego",
+    "drinkId": "dark_amber",
+    "drinkName": "Dark Amber",
+    "quantity": 1,
+    "calories": 65,
+    "ts": "2026-02-05T05:37:41.388808+00:00",
+    "mood": "adventurous"
+  },
+  {
+    "username": "lego",
+    "drinkId": "amber_storm",
+    "drinkName": "Amber Storm",
+    "quantity": 1,
+    "calories": 104,
+    "ts": "2026-02-05T14:16:55.835226+00:00",
+    "mood": "adventurous"
+  },
+  {
+    "username": "lego",
+    "drinkId": "tropical_charge",
+    "drinkName": "Tropical Charge",
+    "quantity": 1,
+    "calories": 86,
+    "ts": "2026-02-05T14:17:57.918672+00:00",
+    "mood": "adventurous"
+  },
+  {
+    "username": "1234",
+    "drinkId": "golden_breeze",
+    "drinkName": "Golden Breeze",
+    "quantity": 1,
+    "calories": 64,
+    "ts": "2026-02-06T16:28:14.776475+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "sparkling_citrus_mix",
+    "drinkName": "Sparkling Citrus Mix",
+    "quantity": 1,
+    "calories": 118,
+    "ts": "2026-02-06T16:28:14.776475+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "citrus_shine",
+    "drinkName": "Citrus Shine",
+    "quantity": 1,
+    "calories": 71,
+    "ts": "2026-02-06T16:28:14.776475+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_red_bull",
+    "drinkName": "Red Bull",
+    "quantity": 1,
+    "calories": 110,
+    "ts": "2026-02-06T17:24:23.988542+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:30:00.201938+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:31:27.781316+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:34:24.475597+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:35:10.236985+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:36:02.108204+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:44:41.762281+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:49:10.174845+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:52:45.950234+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:53:32.550387+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:55:05.319499+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:56:40.423128+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T17:59:07.561542+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T18:05:04.866924+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T18:07:51.531613+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-06T18:10:17.794587+00:00",
+    "mood": null
+  },
+  {
+    "username": "1234",
+    "drinkId": "base_water",
+    "drinkName": "Water",
+    "quantity": 1,
+    "calories": 0,
+    "ts": "2026-02-11T14:40:57.690091+00:00",
+    "mood": null
+  }
+]
