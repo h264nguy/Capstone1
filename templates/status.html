@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Bartender Status • Robot Mode</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:#f7efe5;background:linear-gradient(180deg,rgba(10,10,12,.82),rgba(17,17,22,.92)),url('/static/background-1.png') center/cover no-repeat fixed;display:flex;align-items:center;justify-content:center;padding:20px}
+    body.kiosk{padding:0}
+    body.kiosk .panel{width:100%;min-height:100vh;border-radius:0;border-left:0;border-right:0}
+    .top-actions{position:fixed;top:16px;right:16px;z-index:10;display:flex;gap:10px}
+    .action-btn{appearance:none;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.45);color:#f7efe5;padding:10px 14px;border-radius:999px;font-size:14px;cursor:pointer;backdrop-filter:blur(8px)}
+    .action-btn:hover{background:rgba(255,255,255,.08)}
+    .panel{width:min(980px,100%);background:rgba(0,0,0,.56);border:1px solid rgba(255,255,255,.14);border-radius:28px;box-shadow:0 20px 60px rgba(0,0,0,.45);overflow:hidden;backdrop-filter:blur(10px)}
+    .header{padding:24px 28px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+    .eyebrow{font-size:12px;letter-spacing:.22em;opacity:.8;text-transform:uppercase}
+    h1{margin:8px 0 0;font-size:clamp(28px,4vw,52px)}
+    .body{padding:24px 28px 30px;display:grid;gap:18px}
+    .main-card,.stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:22px}
+    .main-card{padding:22px}
+    .stat{padding:18px}
+    .label{font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-bottom:8px}
+    .drink{font-size:clamp(34px,5vw,64px);font-weight:700;line-height:1.02;margin:0 0 14px}
+    .headline{font-size:clamp(18px,2.6vw,28px);opacity:.95;margin:0}
+    .meta-row{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+    .meta-pill{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:14px;letter-spacing:.08em;text-transform:uppercase;opacity:.88}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .stat-value{font-size:clamp(24px,3vw,40px);font-weight:700;margin-top:4px}
+    .ingredients-list{font-size:20px;line-height:1.35;word-break:break-word}
+    .progress-wrap{background:rgba(255,255,255,.10);height:18px;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,#f9dfb0,#f4a261);transition:width .4s linear}
+    .progress-text{margin-top:10px;font-size:18px;opacity:.9}
+    .footer{display:flex;justify-content:space-between;gap:18px;align-items:center;opacity:.72;font-size:14px}
+    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#8be28b;box-shadow:0 0 14px rgba(139,226,139,.8);margin-right:8px}
+    @media (max-width:760px){.grid{grid-template-columns:1fr}.panel{border-radius:20px}.body,.header{padding:18px}}
+
+    .hero{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:20px;align-items:stretch}
+    .face-card{position:relative;display:flex;align-items:center;justify-content:center;min-height:300px;padding:18px;background:linear-gradient(180deg,rgba(138,236,224,.22),rgba(100,170,180,.14));border:1px solid rgba(180,255,240,.18);border-radius:26px;overflow:hidden}
+    .face-aura{position:absolute;inset:auto 10% -18% 10%;height:42%;border-radius:50%;background:radial-gradient(circle,rgba(250,223,176,.22),transparent 65%);filter:blur(14px);pointer-events:none}
+    .robot-shell{position:relative;width:min(100%,290px);aspect-ratio:1/1.06;border-radius:26px;background:linear-gradient(180deg,#7ed7cf,#77c9c8 58%,#65b2bf);box-shadow:0 22px 50px rgba(0,0,0,.28), inset 0 0 0 4px rgba(10,50,60,.18);padding:20px 18px 26px;display:flex;flex-direction:column;justify-content:space-between;animation:floaty 4s ease-in-out infinite}
+    .robot-shell::before{content:'';position:absolute;inset:12px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.03));pointer-events:none}
+    .screen{position:relative;z-index:1;flex:1;border-radius:18px;background:linear-gradient(180deg,#baf7c7,#9fecc9);border:4px solid rgba(18,65,70,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px 18px;overflow:hidden}
+    .screen::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.18),transparent 35%,transparent 70%,rgba(255,255,255,.08));pointer-events:none}
+    .eyes{display:flex;gap:38px;align-items:flex-end;justify-content:center;min-height:66px;margin-top:4px}
+    .eye{width:26px;height:52px;border-radius:999px;background:#11252f;transform-origin:center center;transition:transform .18s ease,height .18s ease,width .18s ease,border-radius .18s ease,opacity .18s ease}
+    .eye.happy{height:18px;width:30px;border-radius:0 0 999px 999px}
+    .eye.sleep{height:6px;width:34px;border-radius:999px}
+    .eye.blink{height:5px !important;width:30px !important;border-radius:999px !important}
+    .mouth-wrap{position:relative;height:78px;display:flex;align-items:center;justify-content:center;width:100%}
+    .mouth{width:74px;height:14px;border-radius:999px;background:#11252f;transition:all .18s ease;position:relative}
+    .mouth.smile{height:30px;width:90px;border-radius:0 0 90px 90px;background:transparent;border:7px solid #11252f;border-top:0}
+    .mouth.open{width:52px;height:56px;border-radius:20px 20px 28px 28px}
+    .mouth.talk{animation:talkMouth .28s ease-in-out infinite alternate}
+    .cheeks{position:absolute;left:0;right:0;top:62%;display:flex;justify-content:space-between;padding:0 36px;pointer-events:none}
+    .cheek{width:28px;height:14px;border-radius:999px;background:rgba(255,130,160,.28);filter:blur(.2px);opacity:0;transition:opacity .2s ease}
+    .screen-message{margin-top:12px;font-size:15px;font-weight:700;letter-spacing:.04em;text-align:center;color:#17464a;min-height:42px;display:flex;align-items:center;justify-content:center}
+    .robot-bottom{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;align-items:center;padding-top:14px}
+    .speaker{height:24px;border-radius:8px;background:repeating-linear-gradient(90deg,rgba(18,37,47,.55) 0 6px,rgba(18,37,47,.15) 6px 12px)}
+    .cross{position:relative;width:42px;height:42px;margin:0 auto;border-radius:12px;background:rgba(18,37,47,.12)}
+    .cross::before,.cross::after{content:'';position:absolute;background:#214954;border-radius:4px}
+    .cross::before{width:12px;height:34px;left:15px;top:4px}
+    .cross::after{width:34px;height:12px;left:4px;top:15px}
+    .buttons{display:flex;justify-content:flex-end;gap:8px}
+    .buttons span{width:14px;height:14px;border-radius:50%;display:inline-block;background:#f7df82;box-shadow:18px 0 0 #ed8e80,-18px 0 0 #8bd3ff}
+    .voice-pill{position:absolute;left:16px;top:16px;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.14);font-size:13px}
+    .voice-indicator{width:8px;height:8px;border-radius:50%;background:#8be28b;box-shadow:0 0 10px rgba(139,226,139,.9)}
+    .celebrate{animation:celebrate 680ms ease-in-out 3}
+    .listening .eye{transform:translateY(-2px)}
+    .idle-look-left .eyes{transform:translateX(-8px)}
+    .idle-look-right .eyes{transform:translateX(8px)}
+    .is-talking .cheek{opacity:1}
+    .sparkles{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .2s ease}
+    .sparkles span{position:absolute;font-size:22px;animation:spark 1.2s ease-in-out infinite}
+    .sparkles span:nth-child(1){left:12%;top:18%}
+    .sparkles span:nth-child(2){right:12%;top:22%;animation-delay:.2s}
+    .sparkles span:nth-child(3){left:20%;bottom:18%;animation-delay:.4s}
+    .sparkles span:nth-child(4){right:20%;bottom:15%;animation-delay:.1s}
+    .show-sparkles .sparkles{opacity:1}
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    @keyframes talkMouth{from{transform:scaleY(.65)}to{transform:scaleY(1.02)}}
+    @keyframes celebrate{0%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-10px) rotate(-5deg)}40%{transform:translateY(0) rotate(5deg)}60%{transform:translateY(-8px) rotate(-4deg)}80%{transform:translateY(0) rotate(4deg)}}
+    @keyframes spark{0%,100%{transform:translateY(0) scale(.8);opacity:.45}50%{transform:translateY(-8px) scale(1.08);opacity:1}}
+    @media (max-width:900px){.hero{grid-template-columns:1fr}.face-card{min-height:260px}}
+    @media (max-width:760px){.grid{grid-template-columns:1fr}.panel{border-radius:20px}.body,.header{padding:18px}.robot-shell{width:min(100%,250px)}}
+  </style>
+</head>
+<body>
+  <div class="top-actions"><button id="fullscreenBtn" class="action-btn" type="button">Full screen</button></div>
+  <div class="panel">
+    <div class="header">
+      <div class="eyebrow">Capstone Live Machine Display</div>
+      <h1>Smart Bartender Status</h1>
+    </div>
+    <div class="body">
+      <div class="hero">
+        <div class="face-card">
+          <div class="voice-pill"><span class="voice-indicator"></span><span id="voiceState">Voice ready</span></div>
+          <div class="face-aura"></div>
+          <div class="robot-shell idle-look-left" id="robotShell">
+            <div class="screen" id="robotScreen">
+              <div class="sparkles" id="sparkles"><span>✨</span><span>⭐</span><span>✨</span><span>⭐</span></div>
+              <div class="eyes" id="eyesRow">
+                <div class="eye" id="eyeLeft"></div>
+                <div class="eye" id="eyeRight"></div>
+              </div>
+              <div class="mouth-wrap">
+                <div class="cheeks"><span class="cheek"></span><span class="cheek"></span></div>
+                <div class="mouth" id="mouth"></div>
+              </div>
+              <div class="screen-message" id="robotMessage">Hi! I’m ready to make drinks.</div>
+            </div>
+            <div class="robot-bottom">
+              <div class="speaker"></div>
+              <div class="cross"></div>
+              <div class="buttons"><span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="main-card">
+          <div class="label" id="mainLabel">Now Making</div>
+          <p class="drink" id="drink">Idle</p>
+          <div class="label">Status</div>
+          <p class="headline" id="headline">Waiting for next order</p>
+          <div class="meta-row">
+            <span class="meta-pill" id="orderCode">Order #----</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Ingredient(s)</div>
+          <div class="stat-value ingredients-list" id="ingredient">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Step</div>
+          <div class="stat-value" id="step">—</div>
+        </div>
+        <div class="stat">
+          <div class="label">Time Left</div>
+          <div class="stat-value" id="time">0s</div>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Progress</div>
+        <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">0%</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">Next Drink</div>
+        <div class="stat-value" id="nextDrink">—</div>
+      </div>
+
+      <div class="footer">
+        <div><span class="dot"></span><span id="connection">Live</span></div>
+        <div id="updated">Waiting for updates…</div>
+      </div>
+    </div>
+  </div>
+<script>
+const drinkLookup = {};
+let liveStatus = null;
+let activeQueue = [];
+const orderBaselines = {};
+let lastRenderedOrderKey = '';
+
+let robotMode = 'idle';
+let voiceUnlocked = false;
+let lastSpeechKey = '';
+let lastIdleAnimationAt = 0;
+let blinkTimer = null;
+
+function robotEls(){
+  return {
+    shell: document.getElementById('robotShell'),
+    screen: document.getElementById('robotScreen'),
+    mouth: document.getElementById('mouth'),
+    left: document.getElementById('eyeLeft'),
+    right: document.getElementById('eyeRight'),
+    msg: document.getElementById('robotMessage'),
+    sparkles: document.getElementById('sparkles'),
+    voice: document.getElementById('voiceState'),
+  };
+}
+function clearRobotStateClasses(){
+  const {shell,mouth,left,right,screen} = robotEls();
+  if(!shell || !mouth || !left || !right || !screen) return;
+  shell.classList.remove('idle-look-left','idle-look-right','listening','celebrate','show-sparkles','is-talking');
+  mouth.className = 'mouth';
+  left.className = 'eye';
+  right.className = 'eye';
+}
+function setRobotFace(mode, text){
+  const {shell,mouth,left,right,msg} = robotEls();
+  if(!shell || !mouth || !left || !right || !msg) return;
+  clearRobotStateClasses();
+  robotMode = mode;
+  if(text) msg.textContent = text;
+  if(mode === 'idle'){
+    shell.classList.add(Math.random() > 0.5 ? 'idle-look-left' : 'idle-look-right');
+    mouth.classList.add('smile');
+  } else if(mode === 'queued'){
+    shell.classList.add('listening');
+    mouth.classList.add('open');
+  } else if(mode === 'making'){
+    shell.classList.add('listening');
+    mouth.classList.add('open');
+  } else if(mode === 'done'){
+    left.classList.add('happy');
+    right.classList.add('happy');
+    mouth.classList.add('smile');
+    shell.classList.add('celebrate','show-sparkles');
+  }
+}
+function robotBlink(){
+  const {left,right} = robotEls();
+  if(!left || !right) return;
+  left.classList.add('blink'); right.classList.add('blink');
+  setTimeout(() => { left.classList.remove('blink'); right.classList.remove('blink'); }, 150);
+}
+function loopBlink(){
+  clearTimeout(blinkTimer);
+  blinkTimer = setTimeout(() => { robotBlink(); loopBlink(); }, 1800 + Math.random()*2200);
+}
+function safeSpeak(text, key){
+  const {voice,shell,mouth} = robotEls();
+  if(key && key === lastSpeechKey) return;
+  if(!('speechSynthesis' in window)){
+    if(voice) voice.textContent = 'Voice unavailable';
+    return;
+  }
+  if(speechSynthesis.speaking) speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.02;
+  u.pitch = 1.78;
+  u.volume = 1;
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v => /Samantha|Google US English|Karen|Moira|Ava|Allison/i.test(v.name)) || voices.find(v => /en/i.test(v.lang)) || voices[0];
+  if(preferred) u.voice = preferred;
+  u.onstart = () => {
+    if(voice) voice.textContent = 'Speaking';
+    if(shell) shell.classList.add('is-talking');
+    if(mouth) mouth.classList.add('talk','open');
+  };
+  u.onend = () => {
+    if(voice) voice.textContent = voiceUnlocked ? 'Voice ready' : 'Tap page to enable voice';
+    if(shell) shell.classList.remove('is-talking');
+    if(mouth) mouth.classList.remove('talk');
+    lastSpeechKey = key || text;
+  };
+  u.onerror = () => {
+    if(voice) voice.textContent = voiceUnlocked ? 'Voice ready' : 'Tap page to enable voice';
+    if(shell) shell.classList.remove('is-talking');
+    if(mouth) mouth.classList.remove('talk');
+  };
+  try {
+    speechSynthesis.speak(u);
+    lastSpeechKey = key || text;
+  } catch(_e){}
+}
+function unlockVoice(){
+  voiceUnlocked = true;
+  const {voice} = robotEls();
+  if(voice) voice.textContent = 'Voice ready';
+}
+function setupVoiceUnlock(){
+  const once = () => {
+    unlockVoice();
+    window.removeEventListener('pointerdown', once);
+    window.removeEventListener('keydown', once);
+  };
+  window.addEventListener('pointerdown', once, {once:true});
+  window.addEventListener('keydown', once, {once:true});
+  const {voice} = robotEls();
+  if(voice) voice.textContent = 'Tap page to enable voice';
+  if('speechSynthesis' in window){
+    const prime = () => { try { speechSynthesis.getVoices(); } catch(_e){} };
+    prime();
+    window.speechSynthesis.onvoiceschanged = prime;
+  }
+}
+function updateRobotFromPresentation(p){
+  const machine = p.machine;
+  const drink = p.s.drink || 'your drink';
+  if(machine === 'done'){
+    setRobotFace('done', 'Yay! Your order has been completed. Yummy!');
+    if(voiceUnlocked) safeSpeak('Yay! Your order has been completed. Yummy!', `done:${p.s.orderId||drink}`);
+  } else if(machine === 'queued'){
+    setRobotFace('queued', `I see ${drink} in the queue!`);
+  } else if(machine === 'idle' || machine === 'waiting' || !p.s.drink){
+    const now = Date.now();
+    if(now - lastIdleAnimationAt > 3200){
+      lastIdleAnimationAt = now;
+      const idleLines = [
+        'Hi! I’m ready to make drinks.',
+        'Pick a drink and I’ll get started!',
+        'Waiting for the next tasty order.',
+        'I’m just hanging out in idle mode.'
+      ];
+      setRobotFace('idle', idleLines[Math.floor(Math.random()*idleLines.length)]);
+    }
+  } else {
+    const pourLine = p.ingredientText ? `Pouring ${p.ingredientText}` : `Making ${drink}`;
+    setRobotFace('making', pourLine);
+    if(p.progress > 4 && p.progress < 18 && voiceUnlocked){
+      safeSpeak(`Making ${drink} now!`, `start:${p.s.orderId||drink}`);
+    }
+  }
+}
+
+function resetBaselinesForNewOrder(nextKey){
+  if(nextKey && nextKey !== lastRenderedOrderKey){
+    Object.keys(orderBaselines).forEach(k => delete orderBaselines[k]);
+    lastRenderedOrderKey = nextKey;
+  }
+}
+
+function prettyLabel(v){
+  return String(v || '').replace(/[_-]+/g, ' ').split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').trim();
+}
+function setText(id, value, fallback='—'){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = (value !== undefined && value !== null && String(value).trim() !== '') ? value : fallback;
+}
+function secondsLabel(v){
+  const n = Number(v || 0);
+  return Number.isFinite(n) ? `${Math.max(0, Math.round(n))}s` : '0s';
+}
+function shortCode(orderId){
+  const s = String(orderId || '').replace(/[^a-zA-Z0-9]/g, '');
+  return s ? `Order #${s.slice(0,4).toUpperCase()}` : 'Order #----';
+}
+async function loadDrinkLookup(){
+  try{
+    const res = await fetch('/api/drinks', {cache:'no-store'});
+    const arr = await res.json();
+    (arr || []).forEach(d => {
+      drinkLookup[d.id] = {
+        name: d.name || prettyLabel(d.id),
+        ingredients: Array.isArray(d.ingredients) ? d.ingredients.map(prettyLabel) : []
+      };
+    });
+  }catch(_e){}
+}
+function getBaseline(s, remaining){
+  const key = String(s.orderId || s.drinkId || s.drink || '__default__');
+  const signature = `${String(s.machine || '')}:${String(s.stage || '')}`;
+  if(!orderBaselines[key] || orderBaselines[key].signature !== signature){
+    orderBaselines[key] = {
+      initialRemaining: Math.max(1, Number(s.remainingSeconds || remaining || 1)),
+      totalIngredients: Math.max(0, Number(s.totalIngredients || (Array.isArray(s.ingredients) ? s.ingredients.length : 0) || 0)),
+      updatedAt: s.updatedAt || null,
+      signature,
+    };
+  }
+  const b = orderBaselines[key];
+  const serverRemaining = Math.max(0, Number(s.remainingSeconds || 0));
+  if((String(s.machine || '').toLowerCase() === 'queued') || (String(s.machine || '').toLowerCase() === 'done')){
+    b.initialRemaining = Math.max(1, serverRemaining || remaining || 1);
+  } else if(serverRemaining > b.initialRemaining){
+    b.initialRemaining = serverRemaining;
+  }
+  const total = Math.max(0, Number(s.totalIngredients || (Array.isArray(s.ingredients) ? s.ingredients.length : 0) || 0));
+  if(total > b.totalIngredients) b.totalIngredients = total;
+  if(s.updatedAt) b.updatedAt = s.updatedAt;
+  return b;
+}
+function normalizeStatus(raw){
+  const s = Object.assign({}, raw || {});
+  const meta = s.drinkId ? (drinkLookup[s.drinkId] || null) : null;
+  const ingredients = Array.isArray(s.ingredients) && s.ingredients.length ? s.ingredients.map(prettyLabel) : (meta ? meta.ingredients : []);
+  s.ingredients = ingredients;
+  if (meta && (!s.drink || ingredients.includes(prettyLabel(s.drink)))) s.drink = meta.name;
+  if ((!s.totalIngredients || Number(s.totalIngredients) <= 0) && ingredients.length) s.totalIngredients = ingredients.length;
+  if (s.currentIngredient) s.currentIngredient = prettyLabel(s.currentIngredient);
+  return s;
+}
+function synthesizeFromQueue(base){
+  const current = Object.assign({}, base || {});
+  const active = (activeQueue || []).find(q => String(q.status || '').toLowerCase() === 'in progress') || null;
+  const pending = (activeQueue || []).find(q => String(q.status || '').toLowerCase() === 'pending') || null;
+  const machine = String(current.machine || '').toLowerCase();
+  if(active){
+    const sameOrder = String(current.orderId || '') === String(active.orderId || '');
+    const useActive = !sameOrder || machine === 'queued' || machine === 'idle' || machine === 'waiting' || machine === '';
+    if(useActive){
+      const startedMs = active.startedAt ? new Date(active.startedAt).getTime() : Date.now();
+      const est = Math.max(1, Number(active.estSeconds || 0) || 1);
+      const elapsed = Math.max(0, Math.floor((Date.now() - startedMs) / 1000));
+      const remaining = Math.max(0, est - elapsed);
+      const total = Math.max(0, active.ingredients.length);
+      const progress = Math.max(0, Math.min(99, Math.round(((est - remaining) / est) * 100)));
+      let step = 0;
+      if(total > 0){
+        step = Math.min(total, Math.max(1, Math.floor(((est - remaining) / est) * total) + 1));
+      }
+      const currentIngredient = total > 0 ? (active.ingredients[Math.max(0, Math.min(step - 1, total - 1))] || '') : '';
+      return Object.assign({}, current, {
+        machine: 'making',
+        stage: 'pouring',
+        orderId: active.orderId || current.orderId || '',
+        drinkId: active.drinkId || current.drinkId || '',
+        drink: active.drinkName || current.drink || '',
+        ingredients: active.ingredients || current.ingredients || [],
+        totalIngredients: total || current.totalIngredients || 0,
+        currentIngredientIndex: step,
+        currentIngredient,
+        remainingSeconds: remaining,
+        progress,
+        updatedAt: new Date().toISOString(),
+      });
+    }
+  }
+  if(!active && pending && (machine === 'idle' || machine === 'waiting' || machine === 'queued' || machine === '')){
+    return Object.assign({}, current, {
+      machine: 'queued',
+      stage: 'queued',
+      orderId: pending.orderId || current.orderId || '',
+      drinkId: pending.drinkId || current.drinkId || '',
+      drink: pending.drinkName || current.drink || '',
+      ingredients: pending.ingredients || current.ingredients || [],
+      totalIngredients: (pending.ingredients || []).length || current.totalIngredients || 0,
+      currentIngredientIndex: 0,
+      currentIngredient: '',
+    });
+  }
+  return current;
+}
+
+function computePresentation(raw){
+  const s = normalizeStatus(synthesizeFromQueue(raw));
+  const machine = String(s.machine || '').toLowerCase();
+  const nextKey = String(s.orderId || s.drinkId || s.drink || '__default__');
+  resetBaselinesForNewOrder(nextKey);
+  const updatedMs = s.updatedAt ? new Date(s.updatedAt).getTime() : Date.now();
+  const elapsed = Math.max(0, Math.floor((Date.now() - updatedMs) / 1000));
+  const baseRemaining = Math.max(0, Number(s.remainingSeconds || 0));
+  const remaining = (machine === 'done') ? 0 : Math.max(0, baseRemaining - elapsed);
+  const baseline = getBaseline(s, remaining);
+  const total = Math.max(0, Number(s.totalIngredients || baseline.totalIngredients || 0));
+  const denom = Math.max(1, Number(baseline.initialRemaining || baseRemaining || 1));
+
+  let inferredProgress = Math.round(((denom - remaining) / denom) * 100);
+  inferredProgress = Math.max(0, Math.min(100, inferredProgress));
+  let progress = Number(s.progress || 0);
+  if(machine === 'done') progress = 100;
+  else if(machine === 'queued') progress = 0;
+  else if(machine !== 'idle' && machine !== 'waiting') progress = Math.max(progress, inferredProgress);
+  progress = Math.max(0, Math.min(100, progress));
+
+  let stepNow = Number(s.currentIngredientIndex || 0);
+  if(machine === 'done'){
+    stepNow = total;
+  } else if(total > 0){
+    const elapsedRatio = Math.max(0, Math.min(0.999, (denom - remaining) / denom));
+    const inferredFromClock = machine === 'queued' ? 0 : Math.min(total, Math.floor(elapsedRatio * total) + 1);
+    const inferredFromCurrentIngredient = (Array.isArray(s.ingredients) && s.currentIngredient)
+      ? Math.max(0, s.ingredients.findIndex(x => String(x).toLowerCase() === String(s.currentIngredient).toLowerCase()) + 1)
+      : 0;
+    if(machine === 'queued'){
+      stepNow = 0;
+    } else {
+      stepNow = Math.max(stepNow, inferredFromCurrentIngredient, inferredFromClock);
+      stepNow = Math.min(total, Math.max(1, stepNow));
+    }
+  }
+
+  let ingredientText = s.currentIngredient || '';
+  if(Array.isArray(s.ingredients) && s.ingredients.length){
+    if(machine === 'done') ingredientText = s.ingredients.join(', ');
+    else if(stepNow > 0 && machine !== 'queued') ingredientText = s.ingredients[Math.min(stepNow - 1, s.ingredients.length - 1)] || ingredientText;
+    else ingredientText = s.ingredients.join(', ');
+  }
+
+  let displayLabel = 'Now Making';
+  let headline = 'Waiting for next order';
+  if(machine === 'queued'){
+    displayLabel = 'Up Next';
+    headline = 'Waiting in queue';
+  } else if(machine === 'done'){
+    displayLabel = 'Ready to Serve';
+    headline = 'Ready to serve';
+  } else if(machine === 'idle' || machine === 'waiting' || !s.drink){
+    displayLabel = 'Now Making';
+    headline = 'Waiting for next order';
+  } else {
+    displayLabel = 'Now Making';
+    headline = ingredientText ? `Making now • Pouring ${ingredientText}` : 'Making now';
+  }
+
+  const nextOrder = (activeQueue || []).find(o => String(o.orderId || '') !== String(s.orderId || '')) || null;
+  const nextDrink = nextOrder ? `${nextOrder.drinkName || nextOrder.drink || 'Drink'} • ${shortCode(nextOrder.orderId)}` : '—';
+
+  return {s, machine, updatedMs, remaining, progress, stepNow, total, ingredientText, displayLabel, headline, nextDrink};
+}
+function renderStatus(raw){
+  const p = computePresentation(raw);
+  const s = p.s;
+  updateRobotFromPresentation(p);
+  setText('mainLabel', p.displayLabel, 'Now Making');
+  setText('drink', s.drink || 'Idle', 'Idle');
+  setText('headline', p.headline, 'Waiting for next order');
+  const orderCodeEl = document.getElementById('orderCode');
+  if(orderCodeEl){
+    const hasOrder = !!String(s.orderId || '').trim();
+    orderCodeEl.textContent = hasOrder ? shortCode(s.orderId) : '';
+    orderCodeEl.style.display = hasOrder ? 'inline-flex' : 'none';
+  }
+  setText('ingredient', p.ingredientText || (s.ingredients || []).join(', '), '—');
+  setText('step', p.total > 0 ? `${Math.min(p.stepNow, p.total)}/${p.total}` : '—', '—');
+  document.getElementById('time').textContent = secondsLabel(p.remaining);
+  document.getElementById('progressBar').style.width = `${p.progress}%`;
+  document.getElementById('progressText').textContent = `${p.progress}%`;
+  setText('nextDrink', p.nextDrink, '—');
+  document.getElementById('connection').textContent = 'Live';
+  document.getElementById('updated').textContent = `Updated ${new Date(p.updatedMs).toLocaleTimeString()}`;
+}
+async function refreshQueue(){
+  try{
+    const res = await fetch('/api/queue/active?limit=5', {cache:'no-store'});
+    const payload = await res.json();
+    activeQueue = Array.isArray(payload.queue) ? payload.queue.map(q => {
+      const first = ((q.items||[])[0]||{});
+      const drinkId = first.drinkId || '';
+      const meta = drinkId && drinkLookup[drinkId] ? drinkLookup[drinkId] : null;
+      const ingredients = meta && Array.isArray(meta.ingredients) ? meta.ingredients.slice() : [];
+      return {
+        orderId: q.id || q.orderId || '',
+        drinkId,
+        drink: first.drinkName || (meta ? meta.name : ''),
+        drinkName: first.drinkName || (meta ? meta.name : ''),
+        status: q.status || '',
+        startedAt: q.startedAt || '',
+        estSeconds: Number(q.estSeconds || 0),
+        ingredients,
+      };
+    }) : [];
+  }catch(_e){
+    activeQueue = [];
+  }
+}
+async function refreshStatus(){
+  try{
+    await refreshQueue();
+    const res = await fetch('/api/status', {cache:'no-store'});
+    const payload = await res.json();
+    liveStatus = payload.status || {};
+    renderStatus(liveStatus);
+  }catch(_e){
+    document.getElementById('connection').textContent = 'Disconnected';
+    document.getElementById('updated').textContent = 'Could not reach server';
+  }
+}
+
+function applyKioskMode(){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('kiosk') === '1') document.body.classList.add('kiosk');
+}
+function wireFullscreen(){
+  const btn = document.getElementById('fullscreenBtn');
+  if(!btn) return;
+  const sync = () => {
+    const isFs = !!document.fullscreenElement;
+    btn.textContent = isFs ? 'Exit full screen' : 'Full screen';
+  };
+  btn.addEventListener('click', async () => {
+    try{
+      if(document.fullscreenElement){
+        await document.exitFullscreen();
+      }else{
+        await document.documentElement.requestFullscreen();
+      }
+      sync();
+    }catch(_e){}
+  });
+  document.addEventListener('fullscreenchange', sync);
+  sync();
+}
+
+(async function init(){
+  applyKioskMode();
+  wireFullscreen();
+  setupVoiceUnlock();
+  loopBlink();
+  await loadDrinkLookup();
+  await refreshStatus();
+  setInterval(() => { if (liveStatus) renderStatus(liveStatus); }, 250);
+  setInterval(refreshStatus, 1000);
+})();
+</script>
+</body>
+</html>
