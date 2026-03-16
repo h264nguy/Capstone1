@@ -1,0 +1,14 @@
+{
+  "machine": "idle",
+  "headline": "Idle",
+  "drink": "",
+  "drinkId": "",
+  "stage": "waiting",
+  "currentIngredient": "",
+  "currentIngredientIndex": 0,
+  "totalIngredients": 0,
+  "remainingSeconds": 0,
+  "progress": 0,
+  "orderId": "",
+  "updatedAt": "2026-03-07T04:22:47.442133+00:00"
+}
