@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BMO Live Machine Display</title>
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    :root{
+      --bg:#050607;
+      --screen:#b9f0e5;
+      --screen-dark:#8ed7c7;
+      --ink:#111;
+      --cream:#f7ead6;
+      --glass:rgba(6,8,10,.42);
+      --line:rgba(247,234,214,.18);
+      --cyan:#88f0ff;
+      --green:#b8ff7f;
+      --yellow:#ffe36a;
+    }
+    html,body{height:100%;margin:0;background:radial-gradient(circle at 20% 20%, #0f2024 0, #080a0d 35%, #030405 100%);font-family:Inter,Arial,sans-serif;color:var(--cream);overflow:hidden}
+    body:before,body:after{content:"";position:fixed;inset:auto;pointer-events:none;opacity:.15;filter:blur(2px)}
+    body:before{left:-4vw;bottom:-8vh;width:38vw;height:48vh;border:10px solid #ff9100;border-radius:40% 38% 28% 34%/48% 42% 35% 45%}
+    body:after{right:-6vw;top:-4vh;width:34vw;height:34vw;border:10px solid #23f1d8;border-radius:50%}
+
+    .stage{position:relative;width:100vw;height:100vh;padding:max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,29vw);gap:18px}
+    .hero,.queue{position:relative;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(14px);border-radius:30px;box-shadow:0 18px 55px rgba(0,0,0,.28);overflow:hidden}
+    .hero{padding:20px 22px 18px;display:grid;grid-template-rows:auto 1fr auto;min-height:0}
+    .queue{padding:20px;display:grid;grid-template-rows:auto auto 1fr;min-height:0}
+
+    .heroTop{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+    .title{font-size:clamp(22px,2.4vw,36px);font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .sub{opacity:.82;margin-top:6px;font-size:14px;line-height:1.45;max-width:620px}
+    .pill{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 16px var(--green)}
+
+    .displayWrap{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:center;min-height:0;padding-top:6px}
+
+    .bmoScene{position:relative;min-height:0;height:100%;display:grid;place-items:center;overflow:hidden;border-radius:24px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));}
+    .orbit,.orbit2,.spark{position:absolute;border:8px solid rgba(35,241,216,.20);border-radius:50%;pointer-events:none}
+    .orbit{width:56vmin;height:22vmin;right:-10vmin;top:4vmin;transform:rotate(9deg)}
+    .orbit2{width:42vmin;height:14vmin;left:-8vmin;bottom:5vmin;border-color:rgba(255,145,0,.28);transform:rotate(-8deg)}
+    .spark{width:22px;height:22px;border-width:6px;border-color:rgba(255,227,106,.45);left:12%;top:18%;animation:twinkle 1.8s ease-in-out infinite}
+
+    .bmo{position:relative;width:min(82vmin,78%);max-width:700px;aspect-ratio:0.78;border-radius:42px;background:linear-gradient(180deg,#93dcc8,#73c6af);box-shadow:inset 0 -12px 0 rgba(0,0,0,.08),0 24px 64px rgba(0,0,0,.32);padding:32px 28px 22px;animation:floaty 4.2s ease-in-out infinite}
+    .bmoShadow{position:absolute;bottom:6%;left:50%;transform:translateX(-50%);width:52%;height:5%;background:rgba(0,0,0,.25);filter:blur(18px);border-radius:50%}
+    .screen{position:relative;height:61%;border-radius:28px;background:linear-gradient(180deg,var(--screen),var(--screen-dark));border:6px solid rgba(0,0,0,.08);overflow:hidden;box-shadow:inset 0 -10px 0 rgba(0,0,0,.06)}
+    .gridFx{position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,.08), rgba(255,255,255,0)),linear-gradient(90deg, rgba(255,255,255,.08), rgba(255,255,255,0));background-size:100% 28px, 28px 100%;opacity:.17}
+    .face{position:absolute;inset:0;display:grid;place-items:center;transition:.25s ease}
+    .faceInner{position:relative;width:74%;height:74%}
+    .eyes{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);display:flex;gap:66px;align-items:flex-end}
+    .eye{width:24px;height:58px;background:var(--ink);border-radius:999px;transform-origin:center;transition:.2s ease}
+    .blush{position:absolute;top:44%;width:28px;height:10px;border-radius:999px;background:rgba(255,106,136,.22);filter:blur(1px);opacity:.4}
+    .blush.left{left:19%}.blush.right{right:19%}
+    .mouthWrap{position:absolute;left:50%;top:66%;transform:translate(-50%,-50%);width:150px;height:84px}
+    .mouth{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:106px;height:52px;border:8px solid var(--ink);border-top:none;border-left:none;border-right:none;border-radius:0 0 80px 80px;transition:.22s ease}
+    .speechBubble{position:absolute;right:4%;top:6%;max-width:42%;padding:14px 16px;border-radius:24px 24px 24px 10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);font-weight:800;line-height:1.3;backdrop-filter:blur(6px);opacity:0;transform:translateY(8px);transition:.25s ease}
+    .speechBubble.show{opacity:1;transform:translateY(0)}
+
+    .face.idle .eye{animation:blink 4.8s infinite}
+    .face.idle.look-left .eye{transform:translateX(-10px)}
+    .face.idle.look-right .eye{transform:translateX(10px)}
+    .face.idle.wink .eye:first-child{height:8px;width:46px}.face.idle.wink .eye:last-child{height:58px;width:24px}
+    .face.idle.smile-big .mouth{width:122px;height:64px}
+    .face.working .mouth{width:84px;height:18px;border:none;background:var(--ink);border-radius:999px}
+    .face.working .eye{height:54px}.face.working.talk .mouth{width:64px;height:34px;border:none;background:var(--ink);border-radius:50%}
+    .face.celebrate .eye{height:12px;width:48px;border-radius:999px}.face.celebrate .mouth{width:130px;height:76px;border-width:10px}
+
+    .bmoBottom{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;padding:18px 6px 0}
+    .dpad{position:relative;width:82px;height:82px;border-radius:50%;background:rgba(0,0,0,.14)}
+    .dpad:before,.dpad:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.22);border-radius:12px}
+    .dpad:before{width:20px;height:68px}.dpad:after{width:68px;height:20px}
+    .btns{display:flex;gap:14px;align-items:center}.btnA,.btnB{width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.18)}.btnB{width:18px;height:18px}
+
+    .infoCard{height:100%;padding:22px;border:1px solid var(--line);border-radius:26px;background:rgba(255,255,255,.04);display:grid;grid-template-rows:auto auto auto auto 1fr auto;min-height:0}
+    .miniLabel{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.76;font-weight:800}
+    .drink{font-size:clamp(26px,3.6vw,46px);font-weight:900;line-height:1.03;margin-top:8px;min-height:1.1em}
+    .metaGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+    .mini{padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .miniValue{font-size:28px;font-weight:900;margin-top:6px}
+    .progressWrap{margin-top:18px}.bar{height:18px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;border:1px solid rgba(255,255,255,.06)}
+    .fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,#fff0c6,var(--yellow));box-shadow:0 0 22px rgba(255,227,106,.28);transition:width .25s linear}
+    .stepRow{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-weight:700;opacity:.95}
+    .ingredientNow{margin-top:18px;padding:18px;border-radius:22px;border:1px solid rgba(136,240,255,.22);background:rgba(136,240,255,.08)}
+    .ingredientNow .value{margin-top:6px;font-size:30px;font-weight:900;line-height:1.1}
+    .celebrateBanner{margin-top:18px;padding:16px 18px;border-radius:20px;background:rgba(184,255,127,.12);border:1px solid rgba(184,255,127,.32);font-weight:800;display:none}
+    .voiceTag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.72;margin-top:10px}
+    .clock{opacity:.72;font-size:13px;margin-top:14px}
+
+    .queueTitle{font-size:22px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+    .queueList{margin-top:18px;overflow:auto;min-height:0;padding-right:6px}
+    .queueCard{padding:16px 18px;border-radius:22px;background:rgba(255,255,255,.04);border:1px solid var(--line);margin-bottom:12px}
+    .queueCard.active{border-color:rgba(136,240,255,.34);box-shadow:0 0 0 1px rgba(136,240,255,.12),0 0 24px rgba(136,240,255,.10)}
+    .qTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.qName{font-weight:900;font-size:21px}.qMeta{margin-top:6px;opacity:.84;line-height:1.45}
+    .empty{display:grid;place-items:center;height:100%;text-align:center;opacity:.92;padding:24px}.emptyBig{font-size:30px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.emptySmall{margin-top:10px;line-height:1.5;max-width:340px}
+
+    @keyframes blink{0%,44%,46%,100%{transform:scaleY(1)}45%{transform:scaleY(.08)}}
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+    @keyframes twinkle{0%,100%{opacity:.18;transform:scale(.9)}50%{opacity:.55;transform:scale(1.1)}}
+
+    @media (max-width:1100px){
+      .stage{grid-template-columns:1fr;padding:14px}
+      .queue{display:none}
+      .displayWrap{grid-template-columns:1fr}
+      .bmo{width:min(74vmin,88%)}
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <section class="hero">
+      <div class="heroTop">
+        <div>
+          <div class="title">BMO Live Machine Display</div>
+          <div class="sub">Optimized for iPad Pro 11&quot; full-screen mode. Idle state shows BMO playing with expressions, and completed orders trigger a happy face plus spoken celebration.</div>
+        </div>
+        <div class="pill"><span class="dot"></span><span id="statusText">Waiting for orders</span></div>
+      </div>
+
+      <div class="displayWrap">
+        <div class="bmoScene">
+          <div class="orbit"></div>
+          <div class="orbit2"></div>
+          <div class="spark"></div>
+          <div class="speechBubble" id="speechBubble">Hehe... I’m ready!</div>
+          <div class="bmoShadow"></div>
+          <div class="bmo" id="bmoUnit">
+            <div class="screen">
+              <div class="gridFx"></div>
+              <div id="face" class="face idle">
+                <div class="faceInner">
+                  <div class="blush left"></div>
+                  <div class="blush right"></div>
+                  <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+                  <div class="mouthWrap"><div class="mouth"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="bmoBottom">
+              <div class="dpad"></div>
+              <div class="btns"><div class="btnA"></div><div class="btnB"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="infoCard">
+          <div class="miniLabel">Now making</div>
+          <div id="drinkName" class="drink">No active drink</div>
+
+          <div class="metaGrid">
+            <div class="mini"><div class="miniLabel">Step</div><div id="stepText" class="miniValue">0/0</div></div>
+            <div class="mini"><div class="miniLabel">ETA</div><div id="etaText" class="miniValue">--s</div></div>
+          </div>
+
+          <div class="progressWrap">
+            <div class="bar"><div id="progressFill" class="fill"></div></div>
+            <div class="stepRow"><span id="progressLabel">Idle</span><span id="positionLabel">Queue empty</span></div>
+          </div>
+
+          <div class="ingredientNow">
+            <div class="miniLabel">Current ingredient</div>
+            <div id="ingredientText" class="value">Waiting...</div>
+          </div>
+
+          <div id="celebrateBanner" class="celebrateBanner">Yay, your drink has been completed.</div>
+          <div class="voiceTag">Speech uses browser text-to-speech on supported iPad browsers.</div>
+          <div id="clock" class="clock">Last refresh: --</div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="queue">
+      <div>
+        <div class="queueTitle">Drink Queue</div>
+        <div class="sub"><span id="queueCount">0</span> active drink(s)</div>
+      </div>
+      <div></div>
+      <div id="queueList" class="queueList"></div>
+    </aside>
+  </div>
+
+  <script>
+    const faceEl = document.getElementById('face');
+    const bubble = document.getElementById('speechBubble');
+    let idleTimer = null;
+    let prevCurrentId = null;
+    let lastSpokenDoneKey = null;
+
+    function fmtSec(s){
+      s = Number.isFinite(s) ? Math.max(0, Math.round(s)) : 0;
+      const m = Math.floor(s/60), r = s%60;
+      return m > 0 ? `${m}m ${String(r).padStart(2,'0')}s` : `${r}s`;
+    }
+    function esc(v){ return String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+    function speak(text){
+      try{
+        if(!('speechSynthesis' in window) || !text) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 1.06;
+        u.pitch = 1.45;
+        u.volume = 1;
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = voices.find(v => /samantha|ava|victoria|karen|moira/i.test(v.name)) || voices.find(v => /en/i.test(v.lang));
+        if(preferred) u.voice = preferred;
+        window.speechSynthesis.speak(u);
+      }catch(e){}
+    }
+
+    function showBubble(text, ms=2200){
+      bubble.textContent = text;
+      bubble.classList.add('show');
+      clearTimeout(showBubble._t);
+      showBubble._t = setTimeout(() => bubble.classList.remove('show'), ms);
+    }
+
+    function startIdlePlay(){
+      clearInterval(idleTimer);
+      faceEl.className = 'face idle';
+      const moods = ['idle', 'idle look-left', 'idle look-right', 'idle wink', 'idle smile-big'];
+      const lines = [
+        'Hehe... I’m ready!',
+        'Order up? I can help!',
+        'Bleep bloop... waiting!',
+        'Hi friend!'
+      ];
+      let idx = 0;
+      idleTimer = setInterval(() => {
+        idx = (idx + 1) % moods.length;
+        faceEl.className = `face ${moods[idx]}`;
+        if(idx % 2 === 0) showBubble(lines[idx % lines.length], 1800);
+      }, 2600);
+      showBubble(lines[0], 1800);
+    }
+
+    function stopIdlePlay(){ clearInterval(idleTimer); idleTimer = null; bubble.classList.remove('show'); }
+
+    function renderQueue(list){
+      const holder = document.getElementById('queueList');
+      document.getElementById('queueCount').textContent = String(list.length || 0);
+      if(!list.length){
+        holder.innerHTML = `<div class="empty"><div><div class="emptyBig">No drinks in queue</div><div class="emptySmall">BMO is hanging out on screen until the next order comes in.</div></div></div>`;
+        return;
+      }
+      holder.innerHTML = list.map((item, idx) => `
+        <div class="queueCard ${idx===0 ? 'active' : ''}">
+          <div class="qTop">
+            <div>
+              <div class="qName">${esc(item.drinkName || 'Drink')}</div>
+              <div class="qMeta">Status: ${esc(item.status || 'Pending')}<br>Step: ${item.step || 0}/${item.totalSteps || 0}<br>Ingredient: ${esc(item.currentIngredient || 'Mixing')}</div>
+            </div>
+            <div class="qMeta">ETA: ${fmtSec(item.etaThisSeconds ?? item.etaSeconds ?? 0)}<br>Pos: #${item.position || (idx+1)}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderEmpty(lastDone){
+      document.getElementById('statusText').textContent = 'Waiting for orders';
+      document.getElementById('drinkName').textContent = 'No active drink';
+      document.getElementById('stepText').textContent = '0/0';
+      document.getElementById('etaText').textContent = '--s';
+      document.getElementById('progressFill').style.width = '0%';
+      document.getElementById('progressLabel').textContent = 'Idle mode';
+      document.getElementById('positionLabel').textContent = 'Queue empty';
+      document.getElementById('ingredientText').textContent = 'Waiting...';
+      const banner = document.getElementById('celebrateBanner');
+
+      if(lastDone){
+        const key = `${lastDone.drinkName}`;
+        faceEl.className = 'face celebrate';
+        banner.style.display = 'block';
+        banner.textContent = 'Yay, your drink has been completed.';
+        showBubble('Yay, your drink has been completed.', 2600);
+        if(lastSpokenDoneKey !== key && Number(lastDone.secondsAgo || 999) <= 3){
+          lastSpokenDoneKey = key;
+          speak('Yay, your drink has been completed.');
+        }
+        setTimeout(() => { if(!prevCurrentId) startIdlePlay(); }, 2400);
+      } else {
+        banner.style.display = 'none';
+        startIdlePlay();
+      }
+    }
+
+    function renderCurrent(cur, lastDone){
+      stopIdlePlay();
+      document.getElementById('statusText').textContent = cur.status === 'In Progress' ? 'Machine is making a drink' : 'Next drink is queued';
+      document.getElementById('drinkName').textContent = cur.drinkName || 'Drink';
+      document.getElementById('stepText').textContent = `${cur.step || 0}/${cur.totalSteps || 0}`;
+      document.getElementById('etaText').textContent = fmtSec(cur.etaThisSeconds ?? cur.etaSeconds ?? 0);
+      document.getElementById('progressFill').style.width = `${Math.max(0, Math.min(100, cur.progressPercent || 0))}%`;
+      document.getElementById('progressLabel').textContent = cur.status === 'In Progress' ? `Progress ${Math.round(cur.progressPercent || 0)}%` : 'Waiting to start';
+      document.getElementById('positionLabel').textContent = cur.position ? `Queue position #${cur.position}` : 'Queue position --';
+      document.getElementById('ingredientText').textContent = cur.currentIngredient || 'Mixing';
+      faceEl.className = cur.status === 'In Progress' ? 'face working talk' : 'face idle smile-big';
+      const banner = document.getElementById('celebrateBanner');
+      banner.style.display = lastDone ? 'block' : 'none';
+      banner.textContent = 'Yay, your drink has been completed.';
+      if(cur.status === 'In Progress') showBubble(`${cur.drinkName} is being made!`, 1200);
+    }
+
+    async function tick(){
+      try{
+        const res = await fetch('/api/live-display', {cache:'no-store'});
+        const data = await res.json();
+        if(!data.ok) throw new Error('Bad response');
+        renderQueue(data.queue || []);
+        const currentId = data.current ? String(data.current.id || data.current.drinkName || '') : null;
+        if(data.current) renderCurrent(data.current, data.lastDone);
+        else renderEmpty(data.lastDone);
+        prevCurrentId = currentId;
+        document.getElementById('clock').textContent = `Last refresh: ${new Date().toLocaleTimeString()}`;
+      }catch(err){
+        document.getElementById('statusText').textContent = 'Connection issue';
+        document.getElementById('clock').textContent = 'Live refresh failed';
+      }
+    }
+
+    if('speechSynthesis' in window){ window.speechSynthesis.getVoices(); }
+    startIdlePlay();
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
