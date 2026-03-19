@@ -1,0 +1,682 @@
+[
+  {
+    "id": "afff7a60-a645-44a5-9e81-1fbb1ac72cf9",
+    "username": "6666",
+    "ts": "2026-01-22T02:04:56.086750+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "classic_fusion",
+        "drinkName": "Classic Fusion",
+        "quantity": 3,
+        "calories": 76
+      },
+      {
+        "drinkId": "sparkling_citrus_mix",
+        "drinkName": "Sparkling Citrus Mix",
+        "quantity": 4,
+        "calories": 118
+      },
+      {
+        "drinkId": "tropical_charge",
+        "drinkName": "Tropical Charge",
+        "quantity": 4,
+        "calories": 86
+      },
+      {
+        "drinkId": "base_coca_cola",
+        "drinkName": "Coca-Cola",
+        "quantity": 3,
+        "calories": 140
+      }
+    ],
+    "startedAt": "2026-01-27T01:45:52.271019+00:00",
+    "estSeconds": 358
+  },
+  {
+    "id": "dd59d224-a93d-4f95-8a10-c66194edb205",
+    "username": "6666",
+    "ts": "2026-01-22T02:05:20.471060+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "cola_spark",
+        "drinkName": "Cola Spark",
+        "quantity": 4,
+        "calories": 81
+      },
+      {
+        "drinkId": "citrus_cloud",
+        "drinkName": "Citrus Cloud",
+        "quantity": 4,
+        "calories": 84
+      }
+    ],
+    "startedAt": "2026-01-27T01:45:55.134574+00:00",
+    "estSeconds": 208
+  },
+  {
+    "id": "0b4a1c70-756a-4d12-8ad0-d5a179a33ba0",
+    "username": "6666",
+    "ts": "2026-01-22T02:05:33.899478+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "amber_storm",
+        "drinkName": "Amber Storm",
+        "quantity": 6,
+        "calories": 104
+      },
+      {
+        "drinkId": "base_orange_juice",
+        "drinkName": "Orange Juice",
+        "quantity": 4,
+        "calories": 45
+      }
+    ],
+    "startedAt": "2026-01-27T01:45:58.145117+00:00",
+    "estSeconds": 258
+  },
+  {
+    "id": "f023d600-4be4-44ff-98df-0ae1086fc2a0",
+    "username": "6666",
+    "ts": "2026-01-22T02:05:44.047179+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "sunset_fizz",
+        "drinkName": "Sunset Fizz",
+        "quantity": 4,
+        "calories": 87
+      }
+    ],
+    "startedAt": "2026-01-27T01:46:01.136660+00:00",
+    "estSeconds": 108
+  },
+  {
+    "id": "4c3278e1-ef84-49c6-94f8-ec970e4a2973",
+    "username": "1234",
+    "ts": "2026-01-27T01:46:35.211819+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "sparkling_citrus_mix",
+        "drinkName": "Sparkling Citrus Mix",
+        "quantity": 1,
+        "calories": 118
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-01-27T01:46:38.824053+00:00"
+  },
+  {
+    "id": "1dcd2d47-a466-4c7b-8a8f-8b88e9c3276c",
+    "username": "1234",
+    "ts": "2026-01-27T01:46:52.845518+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "base_coca_cola",
+        "drinkName": "Coca-Cola",
+        "quantity": 1,
+        "calories": 140
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-01-27T01:46:53.632247+00:00"
+  },
+  {
+    "id": "8b6421b9-0b5e-4fbe-b8ad-f6d8a3b21c81",
+    "username": "1234",
+    "ts": "2026-01-27T01:47:28.395805+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "classic_fusion",
+        "drinkName": "Classic Fusion",
+        "quantity": 1,
+        "calories": 76
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-01-27T01:47:29.636558+00:00"
+  },
+  {
+    "id": "088b7ff1-7305-422c-8316-81d3e63f0fe5",
+    "username": "6666",
+    "ts": "2026-01-30T16:41:42.054447+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "amber_storm",
+        "drinkName": "Amber Storm",
+        "quantity": 1,
+        "calories": 104
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-02-02T03:33:01.801021+00:00"
+  },
+  {
+    "id": "e60c19a4-7aee-49a9-bbbb-49d0d9564942",
+    "username": "6666",
+    "ts": "2026-01-30T16:42:14.765448+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "classic_fusion",
+        "drinkName": "Classic Fusion",
+        "quantity": 1,
+        "calories": 76
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-02-02T03:33:05.145685+00:00"
+  },
+  {
+    "id": "6a02b98c-c6c0-4bc3-9517-bfed4a3bc898",
+    "username": "1234",
+    "ts": "2026-01-30T16:43:32.155570+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "amber_storm",
+        "drinkName": "Amber Storm",
+        "quantity": 4,
+        "calories": 104
+      },
+      {
+        "drinkId": "cola_spark",
+        "drinkName": "Cola Spark",
+        "quantity": 3,
+        "calories": 81
+      },
+      {
+        "drinkId": "base_sprite",
+        "drinkName": "Sprite",
+        "quantity": 3,
+        "calories": 140
+      }
+    ],
+    "estSeconds": 258,
+    "startedAt": "2026-02-02T03:33:08.068196+00:00"
+  },
+  {
+    "id": "cfc31f2a-d928-4076-a3ac-fa0879c98435",
+    "username": "1234",
+    "ts": "2026-01-30T16:44:13.092633+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "citrus_cloud",
+        "drinkName": "Citrus Cloud",
+        "quantity": 7,
+        "calories": 84
+      }
+    ],
+    "estSeconds": 183,
+    "startedAt": "2026-02-02T03:33:10.983590+00:00"
+  },
+  {
+    "id": "5adfda59-6b8c-48bc-bf84-09e3d62a17b5",
+    "username": "1234",
+    "ts": "2026-01-30T16:45:14.017359+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "chaos_punch",
+        "drinkName": "Chaos Punch",
+        "quantity": 1,
+        "calories": 204
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-02-02T03:33:13.856480+00:00"
+  },
+  {
+    "id": "6310535a-b0b5-4817-b867-7745228cfbc2",
+    "username": "1234",
+    "ts": "2026-01-30T16:57:27.984842+00:00",
+    "status": "complete",
+    "items": [
+      {
+        "drinkId": "base_coca_cola",
+        "drinkName": "Coca-Cola",
+        "quantity": 1,
+        "calories": 140
+      }
+    ],
+    "estSeconds": 33,
+    "startedAt": "2026-02-02T03:33:22.808181+00:00"
+  },
+  {
+    "id": "06ffc820-28e7-416c-89af-aedba3a4a4f5",
+    "username": "1234",
+    "ts": "2026-02-04T02:05:41.703850+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:47:09.865110+00:00"
+  },
+  {
+    "id": "48e1bdb6-ef22-43a0-aa96-3a1fd5996ad7",
+    "username": "1234",
+    "ts": "2026-02-04T02:05:48.859898+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:47:12.829146+00:00"
+  },
+  {
+    "id": "b6fa2424-5b6f-4a9c-93d0-83f218bb0520",
+    "username": "1234",
+    "ts": "2026-02-04T20:52:31.620264+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:47:15.818036+00:00"
+  },
+  {
+    "id": "8c3d3edf-1437-4087-82dd-a7f6842f6306",
+    "username": "1234",
+    "ts": "2026-02-04T21:47:41.268824+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:47:43.049327+00:00"
+  },
+  {
+    "id": "30bae227-6bf0-42fe-9c40-f8bc8b152ac5",
+    "username": "1234",
+    "ts": "2026-02-04T21:48:24.353121+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:48:24.822210+00:00"
+  },
+  {
+    "id": "1f056ac0-e1e7-4ff8-8298-480e5fc93222",
+    "username": "1234",
+    "ts": "2026-02-04T21:48:26.214424+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:48:27.875567+00:00"
+  },
+  {
+    "id": "3013dafa-660b-4cf1-9be6-f69fa15fe2cc",
+    "username": "1234",
+    "ts": "2026-02-04T21:48:47.087155+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:48:48.808117+00:00"
+  },
+  {
+    "id": "6c4f18b4-ea55-4389-b1c6-ca2fc73f01ea",
+    "username": "1234",
+    "ts": "2026-02-04T21:48:49.760093+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T21:48:51.823616+00:00"
+  },
+  {
+    "id": "eb5ab0b5-43e0-4779-8bc6-e0ebce62adfe",
+    "username": "1234",
+    "ts": "2026-02-04T23:14:20.746607+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:14:23.267966+00:00"
+  },
+  {
+    "id": "91f5ef8a-34f6-42cc-9067-b59369c204d9",
+    "username": "1234",
+    "ts": "2026-02-04T23:14:29.511081+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:14:53.281422+00:00"
+  },
+  {
+    "id": "2eaa5ecc-4117-4d7b-9a41-efd7bbddf9c9",
+    "username": "1234",
+    "ts": "2026-02-04T23:14:43.687022+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:15:23.266094+00:00"
+  },
+  {
+    "id": "f2dcde95-0d67-4324-9f58-36da7c687e8a",
+    "username": "1234",
+    "ts": "2026-02-04T23:15:20.713162+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:15:53.250651+00:00"
+  },
+  {
+    "id": "c3db65fc-7bb9-4c30-9352-a3052e016f3d",
+    "username": "1234",
+    "ts": "2026-02-04T23:15:25.650675+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:32:06.809485+00:00"
+  },
+  {
+    "id": "9d51dfcb-bad4-4c9f-b5ac-c2ec7c4f4af5",
+    "username": "1234",
+    "ts": "2026-02-04T23:33:01.024365+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:33:04.097289+00:00"
+  },
+  {
+    "id": "b2ce83ee-5b41-4fd3-a2fa-869b01ff530b",
+    "username": "1234",
+    "ts": "2026-02-04T23:33:01.024365+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:33:33.791202+00:00"
+  },
+  {
+    "id": "bb510fc3-8dfc-4298-9685-829dd9766032",
+    "username": "1234",
+    "ts": "2026-02-04T23:33:12.371783+00:00",
+    "mood": "sweet",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-04T23:34:03.757981+00:00"
+  },
+  {
+    "id": "a14159cd-877d-454d-ad6a-7525ffdc46d9",
+    "username": "lego",
+    "ts": "2026-02-05T04:50:09.216249+00:00",
+    "mood": "energized",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T04:50:10.604500+00:00"
+  },
+  {
+    "id": "a7c89cd6-b85b-4f16-8383-e951b8ff9523",
+    "username": "lego",
+    "ts": "2026-02-05T04:51:07.501402+00:00",
+    "mood": "energized",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T04:51:10.408810+00:00"
+  },
+  {
+    "id": "f21d838c-f538-412a-8c9e-04d85952e115",
+    "username": "lego",
+    "ts": "2026-02-05T05:26:40.421342+00:00",
+    "mood": "chill",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T05:26:41.043113+00:00"
+  },
+  {
+    "id": "2c94fd00-dbb1-4169-b482-82f0f704b32b",
+    "username": "lego",
+    "ts": "2026-02-05T05:37:33.828696+00:00",
+    "mood": "adventurous",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T05:37:34.798273+00:00"
+  },
+  {
+    "id": "dc9cf763-5efb-4efc-be30-dc0935dc9929",
+    "username": "lego",
+    "ts": "2026-02-05T05:37:41.388808+00:00",
+    "mood": "adventurous",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T05:38:04.857834+00:00"
+  },
+  {
+    "id": "24faad4b-af29-47c0-b32c-d166f0813952",
+    "username": "lego",
+    "ts": "2026-02-05T14:16:55.835226+00:00",
+    "mood": "adventurous",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T14:16:56.596303+00:00"
+  },
+  {
+    "id": "f813fd4d-493b-4248-8212-f94e41f24240",
+    "username": "lego",
+    "ts": "2026-02-05T14:17:57.918672+00:00",
+    "mood": "adventurous",
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-05T14:17:59.872051+00:00"
+  },
+  {
+    "id": "8ff79575-87f2-4ea6-8316-35d2ef5addf9",
+    "username": "1234",
+    "ts": "2026-02-06T16:28:14.776475+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T16:28:16.432422+00:00"
+  },
+  {
+    "id": "0268b0f8-19bd-43e8-918a-f7b6284d6a87",
+    "username": "1234",
+    "ts": "2026-02-06T16:28:14.776475+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T16:28:46.728044+00:00"
+  },
+  {
+    "id": "5d92bef8-3388-4642-ba29-727f1e5d5d18",
+    "username": "1234",
+    "ts": "2026-02-06T16:28:14.776475+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T16:29:16.624847+00:00"
+  },
+  {
+    "id": "d60c11ed-cd5a-4212-9635-92bea1887949",
+    "username": "1234",
+    "ts": "2026-02-06T17:24:23.988542+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:24:24.686176+00:00"
+  },
+  {
+    "id": "48eebe5b-d7c7-4ffc-981c-6849e8e89bd9",
+    "username": "1234",
+    "ts": "2026-02-06T17:30:00.201938+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:30:01.562009+00:00"
+  },
+  {
+    "id": "38cff55a-6a43-4d18-9107-17b88c156cfe",
+    "username": "1234",
+    "ts": "2026-02-06T17:31:27.781316+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:31:27.834385+00:00"
+  },
+  {
+    "id": "504cef31-5bf6-4b1b-9608-d04813b3cc7a",
+    "username": "1234",
+    "ts": "2026-02-06T17:34:24.475597+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:34:27.099422+00:00"
+  },
+  {
+    "id": "68c33617-69e5-4246-aa22-75b7fdaf1931",
+    "username": "1234",
+    "ts": "2026-02-06T17:35:10.236985+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:35:10.547209+00:00"
+  },
+  {
+    "id": "9e2d796a-b205-4447-b5cb-ae7ca983adae",
+    "username": "1234",
+    "ts": "2026-02-06T17:36:02.108204+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:36:03.343092+00:00"
+  },
+  {
+    "id": "4680bcd6-5005-4eaa-a3c8-788d36a039a2",
+    "username": "1234",
+    "ts": "2026-02-06T17:44:41.762281+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:44:44.333733+00:00"
+  },
+  {
+    "id": "1b150f2b-5fc3-43f3-9ca3-0e934ba936b8",
+    "username": "1234",
+    "ts": "2026-02-06T17:49:10.174845+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:49:11.180926+00:00"
+  },
+  {
+    "id": "90c45a57-8b6c-4feb-ae89-b5bf3982e27b",
+    "username": "1234",
+    "ts": "2026-02-06T17:52:45.950234+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:52:55.900614+00:00"
+  },
+  {
+    "id": "fe1d1855-1ac2-4fbb-a7ab-191d89cee782",
+    "username": "1234",
+    "ts": "2026-02-06T17:53:32.550387+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:53:42.188767+00:00"
+  },
+  {
+    "id": "0b4eff63-f16c-4dbc-be53-e0427bf54e0d",
+    "username": "1234",
+    "ts": "2026-02-06T17:55:05.319499+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:55:43.525485+00:00"
+  },
+  {
+    "id": "151e8ac9-2228-4b5a-b47b-8e7bbfb77a93",
+    "username": "1234",
+    "ts": "2026-02-06T17:56:40.423128+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:56:40.631272+00:00"
+  },
+  {
+    "id": "beca885a-222b-44b7-a6eb-c42a08d3f377",
+    "username": "1234",
+    "ts": "2026-02-06T17:59:07.561542+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T17:59:08.893625+00:00"
+  },
+  {
+    "id": "26cef834-9326-4808-a4d0-f90abd793e79",
+    "username": "1234",
+    "ts": "2026-02-06T18:05:04.866924+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T18:05:05.907576+00:00"
+  },
+  {
+    "id": "97a84ecc-cdb2-4964-a55c-d315f7c3e6ff",
+    "username": "1234",
+    "ts": "2026-02-06T18:07:51.531613+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T18:07:56.372432+00:00"
+  },
+  {
+    "id": "bae45f46-5709-4fec-9b50-2bdd8a6cfaeb",
+    "username": "1234",
+    "ts": "2026-02-06T18:10:17.794587+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-06T18:10:20.477533+00:00"
+  },
+  {
+    "id": "aca0d58f-e4b9-4ec4-bdb9-17fc6049751b",
+    "username": "1234",
+    "ts": "2026-02-11T14:40:57.690091+00:00",
+    "mood": null,
+    "status": "complete",
+    "items": [],
+    "estSeconds": 33,
+    "startedAt": "2026-02-11T14:40:59.838741+00:00"
+  }
+]
