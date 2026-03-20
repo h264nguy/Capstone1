@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BMO Live Machine Display</title>
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    :root{
+      --bg:#050607;
+      --panel:rgba(9,14,19,.92);
+      --line:rgba(247,234,214,.16);
+      --cream:#f7ead6;
+      --muted:rgba(247,234,214,.78);
+      --mint:#a7ddd3;
+      --mint2:#94d5c8;
+      --face:#14161b;
+      --faceSoft:rgba(20,22,27,.26);
+      --faceSofter:rgba(20,22,27,.18);
+      --good:#a8ff74;
+    }
+    html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--cream)}
+    body{
+      background:
+        radial-gradient(circle at 24% 18%, rgba(17,45,49,.55) 0%, rgba(5,6,7,0) 28%),
+        radial-gradient(circle at 84% 24%, rgba(13,76,68,.2) 0%, rgba(5,6,7,0) 22%),
+        radial-gradient(circle at 50% 50%, #0a1114 0%, #040506 72%, #010101 100%);
+    }
+
+    /* ---------- IDLE / COMPLETE FULLSCREEN ---------- */
+    .idleScreen{
+      position:fixed; inset:0; display:none;
+      background:linear-gradient(180deg, var(--mint) 0%, var(--mint2) 100%);
+      overflow:hidden;
+    }
+    .idleScreen.show{display:block}
+    .idleScreen::before{
+      content:""; position:absolute; right:-12vw; top:22vh;
+      width:38vw; height:38vw; border:8px solid rgba(115,225,210,.12); border-radius:50%;
+    }
+    .idleScreen::after{
+      content:""; position:absolute; left:-10vw; bottom:-6vh;
+      width:38vw; height:16vw; border:8px solid rgba(255,150,35,.18);
+      border-radius:45% 55% 46% 54%/62% 44% 56% 38%;
+      transform:rotate(-9deg);
+    }
+
+    .mainFaceWrap{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;
+    }
+    .mainFace{
+      position:relative; width:min(46vw,700px); aspect-ratio:1; transition:transform .32s ease, opacity .32s ease, filter .32s ease;
+      opacity:.78;
+      filter:drop-shadow(0 18px 28px rgba(0,0,0,.10));
+    }
+    .mainFace .eyes{
+      position:absolute; top:36%; left:50%; width:42%; transform:translateX(-50%);
+      display:flex; justify-content:space-between;
+    }
+    .mainFace .eye{
+      width:17%; height:92px; min-height:74px; background:var(--faceSoft); border-radius:999px; transition:.24s ease;
+    }
+    .mainFace .mouth{
+      position:absolute; top:58%; left:50%; transform:translateX(-50%);
+      width:38%; height:38px; border:8px solid var(--faceSoft); border-top:none; border-radius:0 0 120px 120px; transition:.24s ease;
+    }
+    .mainFace .blush{
+      position:absolute; top:51%; width:74px; height:24px; border-radius:50%;
+      background:rgba(255,160,180,.14); filter:blur(7px); opacity:.35; transition:.24s ease;
+    }
+    .mainFace .blush.left{ left:22% }
+    .mainFace .blush.right{ right:22% }
+
+    /* subtle breathing */
+    .floaty{ animation:floaty 5.4s ease-in-out infinite }
+
+    /* expression states */
+    .idleScreen.base .mainFace{ opacity:.74 }
+    .idleScreen.base .mainFace .eye,
+    .idleScreen.base .mainFace .mouth{ background-color:var(--faceSoft); border-color:var(--faceSoft) }
+
+    .idleScreen.look-left .mainFace{ transform:translateX(-16px) rotate(-1deg); opacity:.8 }
+    .idleScreen.look-left .mainFace .eye{ transform:translateX(-10px) }
+    .idleScreen.look-right .mainFace{ transform:translateX(16px) rotate(1deg); opacity:.8 }
+    .idleScreen.look-right .mainFace .eye{ transform:translateX(10px) }
+
+    .idleScreen.wink .mainFace{ opacity:.82 }
+    .idleScreen.wink .mainFace .eye:first-child{ height:8px; margin-top:36px; border-radius:999px }
+    .idleScreen.wink .mainFace .eye:last-child{ background:var(--faceSoft) }
+    .idleScreen.wink .mainFace .mouth{ width:34%; transform:translateX(-50%) rotate(5deg) }
+
+    .idleScreen.smile-big .mainFace{ opacity:.86 }
+    .idleScreen.smile-big .mainFace .mouth{ width:48%; height:56px; border-color:var(--face) }
+    .idleScreen.smile-big .mainFace .eye{ background:var(--face) }
+
+    .idleScreen.surprised .mainFace{ opacity:.88 }
+    .idleScreen.surprised .mainFace .mouth{ width:18%; height:34px; border:8px solid var(--face); border-radius:50%; top:56% }
+    .idleScreen.surprised .mainFace .eye{ height:86px; background:var(--face) }
+
+    .idleScreen.sleepy .mainFace{ opacity:.62; transform:translateY(8px) }
+    .idleScreen.sleepy .mainFace .eye{ height:14px; margin-top:28px; background:var(--faceSofter) }
+    .idleScreen.sleepy .mainFace .mouth{ width:26%; border-color:var(--faceSofter) }
+
+    .idleScreen.complete .mainFace{ opacity:.96; transform:translateY(-4px) scale(1.03) }
+    .idleScreen.complete .mainFace .eye{ height:10px; width:18%; background:var(--face) }
+    .idleScreen.complete .mainFace .mouth{ width:46%; height:58px; border-color:var(--face) }
+
+    .speechBubble{
+      position:absolute; top:5vh; right:4vw; max-width:34vw;
+      padding:18px 24px; border-radius:999px;
+      background:rgba(0,0,0,.10); border:1px solid rgba(255,255,255,.22);
+      color:rgba(20,20,20,.68); font-weight:900; font-size:clamp(18px,1.5vw,28px);
+      opacity:0; transform:translateY(8px) scale(.98); transition:.22s ease;
+      backdrop-filter:blur(6px);
+    }
+    .speechBubble.show{ opacity:1; transform:translateY(0) scale(1) }
+
+    .bottomCaption{
+      position:absolute; left:50%; bottom:5vh; transform:translateX(-50%);
+      text-align:center; color:rgba(20,20,20,.76);
+      font-weight:1000; letter-spacing:.08em; text-transform:uppercase;
+      font-size:clamp(20px,1.8vw,34px);
+    }
+    .bottomCaption .sub{
+      margin-top:8px; font-size:clamp(15px,1vw,20px); font-weight:700;
+      letter-spacing:.02em; text-transform:none; opacity:.82;
+    }
+
+    /* ---------- ACTIVE DASHBOARD ---------- */
+    .dash{
+      position:fixed; inset:0; display:none; padding:18px;
+      grid-template-columns:1.06fr .96fr .78fr; gap:18px;
+      background:
+        radial-gradient(circle at 24% 18%, rgba(17,45,49,.55) 0%, rgba(5,6,7,0) 28%),
+        radial-gradient(circle at 84% 24%, rgba(13,76,68,.2) 0%, rgba(5,6,7,0) 22%),
+        radial-gradient(circle at 50% 50%, #0a1114 0%, #040506 72%, #010101 100%);
+    }
+    .dash.show{ display:grid }
+    .panel{
+      min-height:0; border:1px solid var(--line); border-radius:28px; background:var(--panel);
+      box-shadow:0 16px 40px rgba(0,0,0,.26); overflow:hidden; position:relative;
+    }
+    .panelPad{ padding:20px }
+    .heroTitle{ font-size:clamp(28px,2.5vw,46px); font-weight:1000; letter-spacing:.06em; text-transform:uppercase }
+    .heroSub{ margin-top:6px; color:var(--muted); font-size:clamp(14px,1vw,20px); line-height:1.35 }
+    .statusPill{
+      position:absolute; right:20px; top:18px; display:inline-flex; align-items:center; gap:10px;
+      padding:12px 18px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid var(--line);
+      font-weight:900; letter-spacing:.08em; text-transform:uppercase
+    }
+    .statusDot{ width:11px; height:11px; border-radius:50%; background:var(--good); box-shadow:0 0 14px rgba(168,255,116,.7) }
+    .leftDisplay{
+      margin-top:10px; height:calc(100% - 110px); min-height:520px; border-radius:28px; overflow:hidden; position:relative;
+      background:linear-gradient(180deg, rgba(11,22,28,.86), rgba(5,7,9,.98));
+    }
+    .leftDisplay:before{
+      content:""; position:absolute; left:17%; top:4%; width:86%; height:24%;
+      border:8px solid rgba(25,231,208,.22); border-radius:50%; transform:rotate(9deg)
+    }
+    .leftDisplay:after{
+      content:""; position:absolute; left:-16%; bottom:2%; width:58%; height:16%;
+      border:8px solid rgba(255,150,35,.26); border-radius:46% 54% 46% 54%/62% 44% 56% 38%; transform:rotate(-9deg)
+    }
+    .miniBubble{
+      position:absolute; right:20px; top:18px; background:rgba(255,255,255,.06); border:1px solid var(--line); backdrop-filter:blur(6px);
+      border-radius:999px; padding:14px 18px; font-size:clamp(16px,1.2vw,26px); font-weight:900; color:var(--muted);
+      opacity:0; transform:translateY(6px); transition:.22s ease; z-index:2
+    }
+    .miniBubble.show{ opacity:1; transform:translateY(0) }
+    .bmoCard{
+      position:absolute; left:10%; bottom:8%; width:78%; aspect-ratio:.78; border-radius:40px;
+      background:linear-gradient(180deg, #8bdcc7 0%, #76c7af 100%);
+      box-shadow:inset 0 -12px 0 rgba(0,0,0,.08), 0 24px 60px rgba(0,0,0,.36);
+      padding:4.8% 4.8% 3.8%;
+    }
+    .bmoScreen{ height:63%; border-radius:30px; background:linear-gradient(180deg,#bff5ea,#9edfd0); position:relative; overflow:hidden; border:7px solid rgba(0,0,0,.08) }
+    .bmoScreen:before{ content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 28%, rgba(255,255,255,.18), rgba(255,255,255,0) 42%) }
+    .dashFace{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center }
+    .dashFaceInner{ position:relative; width:62%; height:44%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10% }
+    .dashEyes{ display:flex; gap:20%; align-items:center; justify-content:center; width:62%; margin-top:2% }
+    .dashEye{ width:11%; height:28%; min-width:20px; min-height:52px; background:#111; border-radius:999px; transition:.18s ease }
+    .dashBlush{ position:absolute; top:42%; width:10%; height:6%; border-radius:50%; background:rgba(255,152,170,.16); filter:blur(2px); opacity:.65 }
+    .dashBlush.left{ left:15% }.dashBlush.right{ right:15% }
+    .dashMouthWrap{ width:34%; height:26%; display:flex; align-items:flex-start; justify-content:center }
+    .dashMouth{ width:100%; height:22px; border:6px solid #111; border-top:none; border-radius:0 0 100px 100px; transition:.18s ease }
+    .dashFace.working .dashEye{ height:24%; width:12%; border-radius:999px 999px 10px 10px; transform:rotate(8deg) }
+    .dashFace.working .dashEye:last-child{ transform:rotate(-8deg) }
+    .dashFace.working .dashMouth{ width:70%; height:4px; border:none; background:#111; border-radius:999px; margin-top:6% }
+    .bmoBottom{ height:37%; position:relative }
+    .dpad{ position:absolute; left:7%; bottom:24%; width:15%; aspect-ratio:1; border-radius:50%; background:rgba(20,40,45,.14) }
+    .dpad:before,.dpad:after{ content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(35,45,48,.26); border-radius:14px }
+    .dpad:before{ width:62%; height:16% }.dpad:after{ width:16%; height:62% }
+    .btns{ position:absolute; right:8%; bottom:27%; display:flex; gap:12%; width:14%; justify-content:flex-end }
+    .btnA,.btnB{ width:26%; aspect-ratio:1; border-radius:50%; background:rgba(20,40,45,.18) }
+    .midTitle{ font-size:clamp(14px,.9vw,18px); letter-spacing:.12em; text-transform:uppercase; font-weight:900; color:var(--muted) }
+    .currentDrink{ font-size:clamp(34px,3vw,62px); font-weight:1000; line-height:.95; margin-top:8px }
+    .stats{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:18px }
+    .stat{ padding:16px 18px; border-radius:22px; border:1px solid var(--line); background:rgba(255,255,255,.04) }
+    .statLabel{ font-size:clamp(12px,.85vw,16px); letter-spacing:.12em; text-transform:uppercase; font-weight:900; color:var(--muted) }
+    .statValue{ margin-top:8px; font-size:clamp(24px,2.2vw,46px); font-weight:1000 }
+    .bar{ margin-top:16px; height:16px; border-radius:999px; background:rgba(255,255,255,.12); overflow:hidden }
+    .barFill{ height:100%; width:0%; background:linear-gradient(90deg,#f7ead6,#c8bea6); transition:width .25s linear; border-radius:999px }
+    .metaRow{ margin-top:10px; display:flex; justify-content:space-between; gap:12px; font-size:clamp(18px,1.2vw,24px); font-weight:900 }
+    .ingredientBox{ margin-top:18px; min-height:0; height:calc(100% - 300px); border-radius:24px; border:1px solid rgba(73,178,201,.35); background:linear-gradient(180deg,rgba(24,40,46,.88),rgba(17,27,34,.96)); padding:18px }
+    .ingredientName{ margin-top:8px; font-size:clamp(24px,2.3vw,40px); font-weight:1000 }
+    .foot{ position:absolute; left:20px; right:20px; bottom:18px; color:rgba(247,234,214,.75); font-size:clamp(14px,.95vw,18px) }
+    .queueTitle{ font-size:clamp(26px,2vw,38px); font-weight:1000; letter-spacing:.06em; text-transform:uppercase }
+    .queueSub{ margin-top:6px; color:var(--muted); font-size:clamp(14px,1vw,18px) }
+    .queueList{ margin-top:18px; display:flex; flex-direction:column; gap:14px }
+    .queueItem{ padding:16px 18px; border-radius:22px; border:1px solid var(--line); background:rgba(255,255,255,.03) }
+    .qDrink{ font-size:clamp(24px,1.8vw,34px); font-weight:1000 }
+    .qMeta{ margin-top:6px; color:var(--muted); font-size:clamp(16px,1vw,20px) }
+    .queueEmpty{ position:absolute; inset:120px 18px 18px 18px; display:none; align-items:center; justify-content:center; text-align:center; color:var(--cream); font-weight:1000; font-size:clamp(22px,2vw,38px) }
+    .queueEmpty.show{ display:flex }
+    .queuePanel:before{
+      content:""; position:absolute; right:-16%; top:6%; width:92%; height:52%;
+      border:8px solid rgba(25,231,208,.22); border-radius:50%; transform:rotate(8deg)
+    }
+
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes bouncy{from{transform:translateY(0) scale(1)}to{transform:translateY(-10px) scale(1.02)}}
+
+    @media (max-aspect-ratio: 4/3){
+      .speechBubble{max-width:82vw;right:50%;transform:translateX(50%) translateY(8px) scale(.98)}
+      .speechBubble.show{transform:translateX(50%) translateY(0) scale(1)}
+      .mainFace{width:min(62vw,680px)}
+      .dash{grid-template-columns:1fr;overflow:auto;padding-bottom:28px}
+      .panel{min-height:420px}
+      .leftDisplay{height:560px}
+    }
+  </style>
+</head>
+<body>
+  <section id="idleScreen" class="idleScreen show base">
+    <div id="speechBubble" class="speechBubble">Hehe... I'm ready!</div>
+
+    <div class="mainFaceWrap">
+      <div id="mainFace" class="mainFace floaty">
+        <div class="blush left"></div><div class="blush right"></div>
+        <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+        <div class="mouth"></div>
+      </div>
+    </div>
+
+    <div class="bottomCaption">
+      <div id="idleTitle">Waiting for orders</div>
+      <div id="idleSub" class="sub">BMO is playing around on screen.</div>
+    </div>
+  </section>
+
+  <section id="dashMode" class="dash">
+    <section class="panel panelPad">
+      <div class="heroTitle">BMO Live Machine Display</div>
+      <div class="heroSub">Idle mode shows subtle weird BMO expressions. When drinks start, the active live dashboard appears.</div>
+      <div class="statusPill"><span class="statusDot"></span><span id="dashStatusText">Now making</span></div>
+
+      <div class="leftDisplay">
+        <div id="miniBubble" class="miniBubble">Working on your drink!</div>
+        <div class="bmoCard">
+          <div class="bmoScreen">
+            <div id="dashFace" class="dashFace working">
+              <div class="dashFaceInner">
+                <div class="dashBlush left"></div><div class="dashBlush right"></div>
+                <div class="dashEyes"><div class="dashEye"></div><div class="dashEye"></div></div>
+                <div class="dashMouthWrap"><div class="dashMouth"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="bmoBottom">
+            <div class="dpad"></div>
+            <div class="btns"><div class="btnA"></div><div class="btnB"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panelPad" style="position:relative;">
+      <div class="midTitle">Now making</div>
+      <div id="currentDrink" class="currentDrink">No active drink</div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="statLabel">Step</div>
+          <div id="stepValue" class="statValue">0/0</div>
+        </div>
+        <div class="stat">
+          <div class="statLabel">ETA</div>
+          <div id="etaValue" class="statValue">--s</div>
+        </div>
+      </div>
+
+      <div class="bar"><div id="etaBar" class="barFill"></div></div>
+      <div class="metaRow">
+        <div id="stateLabel">Idle</div>
+        <div id="queueState">Queue empty</div>
+      </div>
+
+      <div class="ingredientBox">
+        <div class="midTitle">Current ingredient</div>
+        <div id="ingredientValue" class="ingredientName">Waiting...</div>
+      </div>
+
+      <div class="foot">Last refresh: <span id="lastRefresh">--:--:--</span></div>
+    </section>
+
+    <section class="panel panelPad queuePanel" style="position:relative;">
+      <div class="queueTitle">Drink Queue</div>
+      <div id="queueSub" class="queueSub">0 active drink(s)</div>
+      <div id="queueList" class="queueList"></div>
+      <div id="queueEmpty" class="queueEmpty show">No drinks in queue</div>
+    </section>
+  </section>
+
+  <script>
+    const idleScreen = document.getElementById('idleScreen');
+    const dashMode = document.getElementById('dashMode');
+    const speechBubble = document.getElementById('speechBubble');
+    const idleTitle = document.getElementById('idleTitle');
+    const idleSub = document.getElementById('idleSub');
+    const mainFace = document.getElementById('mainFace');
+
+    const dashStatusText = document.getElementById('dashStatusText');
+    const currentDrink = document.getElementById('currentDrink');
+    const stepValue = document.getElementById('stepValue');
+    const etaValue = document.getElementById('etaValue');
+    const etaBar = document.getElementById('etaBar');
+    const stateLabel = document.getElementById('stateLabel');
+    const queueState = document.getElementById('queueState');
+    const ingredientValue = document.getElementById('ingredientValue');
+    const queueSub = document.getElementById('queueSub');
+    const queueList = document.getElementById('queueList');
+    const queueEmpty = document.getElementById('queueEmpty');
+    const miniBubble = document.getElementById('miniBubble');
+    const lastRefresh = document.getElementById('lastRefresh');
+
+    let idleTimer = null;
+    let pollTimer = null;
+    let lastDoneKey = null;
+    let prevCurrentKey = null;
+    let currentMode = 'idle';
+
+    const phases = [
+      { face: 'base', bubble: "Hehe... I'm ready!" },
+      { face: 'wink', bubble: "" },
+      { face: 'look-left', bubble: "" },
+      { face: 'sleepy', bubble: "" },
+      { face: 'look-right', bubble: "" },
+      { face: 'surprised', bubble: "" },
+      { face: 'smile-big', bubble: "" }
+    ];
+
+    function fmt(sec){
+      sec = Math.max(0, parseInt(sec || 0, 10));
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return m > 0 ? `${m}m ${String(s).padStart(2,'0')}s` : `${s}s`;
+    }
+
+    function speak(text){
+      try{
+        if(!('speechSynthesis' in window) || !text) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 1.04;
+        u.pitch = 1.45;
+        u.volume = 1;
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = voices.find(v => /samantha|ava|victoria|karen|moira/i.test(v.name)) || voices.find(v => /^en/i.test(v.lang));
+        if(preferred) u.voice = preferred;
+        window.speechSynthesis.speak(u);
+      }catch(e){}
+    }
+
+    function showBubble(text, ms=1600){
+      if(!text){ speechBubble.classList.remove('show'); return; }
+      speechBubble.textContent = text;
+      speechBubble.classList.add('show');
+      clearTimeout(showBubble._t);
+      showBubble._t = setTimeout(() => speechBubble.classList.remove('show'), ms);
+    }
+
+    function applyIdleFace(face){
+      idleScreen.className = `idleScreen show ${face}`;
+    }
+
+    function startIdle(){
+      clearInterval(idleTimer);
+      currentMode = 'idle';
+      dashMode.classList.remove('show');
+      idleScreen.className = 'idleScreen show base';
+      idleTitle.textContent = 'Waiting for orders';
+      idleSub.textContent = 'BMO is playing around on screen.';
+      mainFace.className = 'mainFace floaty';
+      showBubble("Hehe... I'm ready!", 1600);
+
+      let idx = 0;
+
+      const runIdleCycle = () => {
+        idx = (idx + 1) % phases.length;
+        const phase = phases[idx];
+        applyIdleFace(phase.face);
+        showBubble(phase.bubble || "", 1400);
+      };
+
+      setTimeout(runIdleCycle, 2000);
+      idleTimer = setInterval(runIdleCycle, 4000);
+    }
+
+    function showComplete(done){
+      clearInterval(idleTimer);
+      currentMode = 'complete';
+      dashMode.classList.remove('show');
+      idleScreen.className = 'idleScreen show complete';
+      idleTitle.textContent = 'Drink completed';
+      idleSub.textContent = done && done.drinkName ? done.drinkName : 'Your drink is ready';
+      mainFace.className = 'mainFace bouncy';
+      showBubble('Yay, your drink has been completed.', 3400);
+      speak('Yay, your drink has been completed.');
+      setTimeout(() => {
+        mainFace.className = 'mainFace floaty';
+      }, 3500);
+    }
+
+    function showActive(data){
+      clearInterval(idleTimer);
+      currentMode = 'active';
+      idleScreen.classList.remove('show');
+      dashMode.classList.add('show');
+
+      const current = data.current || null;
+      const queue = Array.isArray(data.queue) ? data.queue : [];
+      const currentName = current && current.drinkName ? current.drinkName : 'No active drink';
+      const stepsDone = current && current.currentStep ? parseInt(current.currentStep, 10) : 0;
+      const stepsTotal = current && current.totalSteps ? parseInt(current.totalSteps, 10) : 0;
+      const etaSec = current && current.etaSeconds != null ? parseInt(current.etaSeconds, 10) : null;
+      const ingredient = current && current.currentIngredient ? current.currentIngredient : 'Waiting...';
+      const qCount = queue.length;
+
+      dashStatusText.textContent = current ? 'Now making' : 'Queue active';
+      currentDrink.textContent = currentName;
+      stepValue.textContent = `${stepsDone || 0}/${stepsTotal || 0}`;
+      etaValue.textContent = etaSec == null ? '--s' : fmt(etaSec);
+      ingredientValue.textContent = ingredient;
+      stateLabel.textContent = current ? 'In progress' : 'Queued';
+      queueState.textContent = qCount ? `${qCount} drink(s)` : 'Queue empty';
+      queueSub.textContent = `${qCount} active drink(s)`;
+      lastRefresh.textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit', second:'2-digit'});
+
+      if(current && prevCurrentKey !== String(current.id || current.drinkName || '')){
+        miniBubble.textContent = 'Working on your drink!';
+        miniBubble.classList.add('show');
+        clearTimeout(miniBubble._t);
+        miniBubble._t = setTimeout(() => miniBubble.classList.remove('show'), 1600);
+      }
+      prevCurrentKey = current ? String(current.id || current.drinkName || '') : null;
+
+      const totalEta = current && current.totalEtaSeconds ? parseInt(current.totalEtaSeconds, 10) : null;
+      const percent = (!current || etaSec == null || !totalEta || totalEta <= 0)
+        ? 0
+        : Math.max(0, Math.min(100, Math.round(((totalEta - etaSec) / totalEta) * 100)));
+      etaBar.style.width = `${percent}%`;
+
+      queueList.innerHTML = '';
+      if(!qCount){
+        queueEmpty.classList.add('show');
+      } else {
+        queueEmpty.classList.remove('show');
+        queue.forEach((item, idx) => {
+          const div = document.createElement('div');
+          div.className = 'queueItem';
+          const drink = item.drinkName || `Drink ${idx+1}`;
+          const pos = item.position != null ? item.position : idx + 1;
+          const st = item.status || (idx === 0 ? 'In Progress' : 'Pending');
+          const eta = item.etaSeconds != null ? fmt(item.etaSeconds) : '--';
+          div.innerHTML = `<div class="qDrink">${drink}</div><div class="qMeta">Position #${pos} • ${st} • ETA ${eta}</div>`;
+          queueList.appendChild(div);
+        });
+      }
+    }
+
+    async function tick(){
+      try{
+        const res = await fetch('/api/live-display', {cache:'no-store'});
+        const data = await res.json();
+        if(!data.ok) throw new Error('bad response');
+
+        const current = data.current || null;
+        const queue = Array.isArray(data.queue) ? data.queue : [];
+        const hasActive = !!current || queue.length > 0;
+        const done = data.lastDone || null;
+        const doneKey = done ? `${done.drinkName || ''}-${done.secondsAgo || 0}` : null;
+
+        if(done && done.secondsAgo <= 10 && doneKey !== lastDoneKey && !hasActive){
+          lastDoneKey = doneKey;
+          prevCurrentKey = null;
+          showComplete(done);
+          return;
+        }
+
+        if(hasActive){
+          showActive(data);
+          return;
+        }
+
+        prevCurrentKey = null;
+        if(currentMode !== 'idle' || !idleTimer){
+          startIdle();
+        }
+      } catch(err){
+        prevCurrentKey = null;
+        if(currentMode !== 'idle'){
+          startIdle();
+        }
+      }
+    }
+
+    if('speechSynthesis' in window){ window.speechSynthesis.getVoices(); }
+    startIdle();
+
+    if(window.location.protocol !== 'file:'){
+      tick();
+      pollTimer = setInterval(tick, 1000);
+    }
+  </script>
+</body>
+</html>
