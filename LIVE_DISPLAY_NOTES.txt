@@ -1,0 +1,4 @@
+Live machine display added.
+Open /live-display or /live after starting FastAPI.
+Template file: app/templates/live_display.html
+API used by screen: /api/live-display
